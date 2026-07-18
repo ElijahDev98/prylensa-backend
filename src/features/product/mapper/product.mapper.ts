@@ -36,7 +36,17 @@ export class ProductMapper {
 
       name: product.name,
 
+      slug: product.slug,
+
+      sku: product.sku,
+
+      modelNumber: product.modelNumber,
+
       description: product.description,
+
+      thumbnail: primaryImage?.url ?? product.thumbnailUrl ?? null,
+
+      isActive: product.isActive,
 
       brand: {
         id: product.brand.id,
@@ -48,13 +58,12 @@ export class ProductMapper {
         name: product.category.name,
       },
 
-      thumbnail: primaryImage?.url ?? product.thumbnailUrl ?? null,
-
       images: product.images.map((image) => ({
         id: image.id,
         imageUrl: image.url,
         altText: image.altText,
         isPrimary: image.isPrimary,
+        sortOrder: image.sortOrder,
       })),
 
       pricing: {

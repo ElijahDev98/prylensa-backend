@@ -5,8 +5,8 @@
  * Feature: Product
  *
  * Purpose:
- * Represents the Product domain model used internally by the application.
- * This model is independent of Prisma and API DTOs.
+ * Represents the Product domain model used throughout the business layer.
+ * This model is independent of Prisma and transport DTOs.
  * -----------------------------------------------------------------------------
  */
 
@@ -18,6 +18,8 @@ export interface ProductImageModel {
   altText: string | null;
 
   isPrimary: boolean;
+
+  sortOrder: number;
 }
 
 export interface ProductBrandModel {
@@ -47,13 +49,21 @@ export interface ProductModel {
 
   name: string;
 
+  slug: string;
+
+  sku: string | null;
+
+  modelNumber: string | null;
+
   description: string | null;
+
+  thumbnail: string | null;
+
+  isActive: boolean;
 
   brand: ProductBrandModel;
 
   category: ProductCategoryModel;
-
-  thumbnail: string | null;
 
   images: ProductImageModel[];
 

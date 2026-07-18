@@ -5,13 +5,10 @@
  * Feature: Product
  *
  * Purpose:
- * Defines the contract for Product data access.
- * Services depend on this interface rather than a concrete repository.
+ * Defines the Product repository contract.
  * -----------------------------------------------------------------------------
  */
 
-import type { CreateProductDto } from "../dto/create-product.dto.js";
-import type { UpdateProductDto } from "../dto/update-product.dto.js";
 import type { ProductModel } from "../models/product.model.js";
 
 export interface IProductRepository {
@@ -31,17 +28,17 @@ export interface IProductRepository {
   findBySlug(slug: string): Promise<ProductModel | null>;
 
   /**
-   * Creates a new product.
+   * Creates a product.
    */
-  create(dto: CreateProductDto): Promise<ProductModel>;
+  create(product: ProductModel): Promise<ProductModel>;
 
   /**
-   * Updates an existing product.
+   * Updates a product.
    */
-  update(id: string, dto: UpdateProductDto): Promise<ProductModel>;
+  update(product: ProductModel): Promise<ProductModel>;
 
   /**
-   * Performs a soft delete.
+   * Soft deletes a product.
    */
   delete(id: string): Promise<void>;
 
