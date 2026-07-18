@@ -1,104 +1,76 @@
 /**
- * ================================================================
+ * -----------------------------------------------------------------------------
  * File: app.ts
+ * Project: Priciq Backend
  * Layer: Application
  *
  * Purpose:
- *   Configures the Express application.
- *
- * Responsibilities:
- *   - Create the Express application
- *   - Register global middleware
- *   - Register application routes
- *   - Handle unknown routes
- *   - Register the global error handler
- *
- * This file should NEVER:
- *   - Start the HTTP server
- *   - Access the database
- *   - Contain business logic
- * ================================================================
+ * Configures the Express application, global middleware,
+ * routes, 404 handler, and global error handler.
+ * -----------------------------------------------------------------------------
  */
 
-import cors from "cors";
-import express, {
-  type NextFunction,
-  type Request,
-  type Response,
-} from "express";
+import express from "express";
 import helmet from "helmet";
+import cors from "cors";
 import morgan from "morgan";
 
-import apiRoutes from "./routes/index.js";
+import routes from "./routes/index.js";
+import { env } from "./config/environment.js";
+import { NotFoundError } from "../shared/errors/not-found-error.js";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
 
-// Create the Express application.
 const app = express();
 
 /**
- * ================================================================
+ * ---------------------------------------------------------------------------
  * Global Middleware
- * ================================================================
+ * ---------------------------------------------------------------------------
  */
 
-// Adds common HTTP security headers.
 app.use(helmet());
 
-// Enables Cross-Origin Resource Sharing.
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
 
-// Parses incoming JSON request bodies.
 app.use(express.json());
 
-// Parses URL-encoded request bodies.
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
 
-// Logs incoming HTTP requests.
-app.use(morgan("dev"));
+app.use(morgan(env.NODE_ENV === "development" ? "dev" : "combined"));
 
 /**
- * ================================================================
+ * ---------------------------------------------------------------------------
  * API Routes
- * ================================================================
+ * ---------------------------------------------------------------------------
  */
-app.use("/api/v1", apiRoutes);
+
+app.use("/api", routes);
 
 /**
- * ================================================================
+ * ---------------------------------------------------------------------------
  * 404 Handler
- * ================================================================
- * Handles requests for routes that do not exist.
+ * ---------------------------------------------------------------------------
  */
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: `Route '${req.originalUrl}' was not found.`,
-    data: null,
-    metadata: {
-      timestamp: new Date().toISOString(),
-    },
-  });
+
+app.use((_req, _res, next) => {
+  next(new NotFoundError("The requested resource was not found."));
 });
 
 /**
- * ================================================================
+ * ---------------------------------------------------------------------------
  * Global Error Handler
- * ================================================================
- * This will be expanded in Milestone 0.3.
+ * ---------------------------------------------------------------------------
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use(
-  (error: Error, _req: Request, res: Response, _next: NextFunction): void => {
-    console.error(error);
 
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error.",
-      data: null,
-      metadata: {
-        timestamp: new Date().toISOString(),
-      },
-    });
-  },
-);
+app.use(errorMiddleware);
 
 export default app;
