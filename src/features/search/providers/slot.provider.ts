@@ -1,4 +1,4 @@
-import type { SearchResultModel } from "../models/search-result.model.js";
+import type { SearchResult } from "../models/search-result.model.js";
 import type { SearchProvider } from "./search-provider.interface.js";
 
 /**
@@ -7,7 +7,7 @@ import type { SearchProvider } from "./search-provider.interface.js";
 export class SlotProvider implements SearchProvider {
   public readonly providerName = "Slot";
 
-  public async search(query: string): Promise<SearchResultModel[]> {
+  public async search(query: string): Promise<SearchResult[]> {
     void query;
 
     return [];
