@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------------------
  * File: prisma.client.ts
  * Project: Priciq Backend
- * Layer: Infrastructure
+ * Layer: Persistence
  *
  * Purpose:
  * Provides a singleton Prisma Client instance for the entire application.
