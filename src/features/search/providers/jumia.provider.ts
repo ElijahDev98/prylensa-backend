@@ -13,7 +13,7 @@ export class JumiaProvider implements SearchProvider {
     const response = await axios.get<string>(url, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36",
         Accept: "text/html",
       },
     });
@@ -22,12 +22,18 @@ export class JumiaProvider implements SearchProvider {
 
     const results: SearchResult[] = [];
 
-    $("article.prd").each((index, element) => {
+    $("article.prd").each((_, element) => {
       const product = $(element);
 
       const title = product.find("h3.name").text().trim();
 
-      const priceText = product.find("div.prc").text().trim();
+      const currentPriceText = product.find("div.prc").text().trim();
+
+      const originalPriceText = product.find("div.old").text().trim();
+
+      const discountText = product.find("div.bdg._dsct").text().trim();
+
+      const ratingText = product.find("div.rev").text().trim();
 
       const image =
         product.find("img").attr("data-src") ??
@@ -36,22 +42,73 @@ export class JumiaProvider implements SearchProvider {
 
       const href = product.find("a.core").attr("href") ?? "";
 
-      if (!title || !priceText || !href) {
+      if (!title || !currentPriceText || !href) {
         return;
       }
 
-      const price = Number(priceText.replace(/[₦,]/g, "").trim());
+      const productUrl = `${JumiaProvider.BASE_URL}${href}`;
 
       results.push({
-        id: `jumia-${index}`,
+        id: this.createProductId(href),
         title,
-        price,
+        price: this.parsePrice(currentPriceText),
+        currency: "NGN",
+        originalPrice: originalPriceText
+          ? this.parsePrice(originalPriceText)
+          : undefined,
+        discountPercentage: this.parseDiscount(discountText),
+        ...this.parseRating(ratingText),
         image,
-        url: `${JumiaProvider.BASE_URL}${href}`,
+        url: productUrl,
         store: "Jumia",
       });
     });
 
     return results;
+  }
+
+  private parsePrice(value: string): number {
+    return Number(value.replace(/[^\d]/g, ""));
+  }
+
+  private parseDiscount(value: string): number | undefined {
+    if (!value) {
+      return undefined;
+    }
+
+    const match = value.match(/\d+/);
+
+    return match ? Number(match[0]) : undefined;
+  }
+
+  private parseRating(
+    value: string,
+  ): Pick<SearchResult, "rating" | "reviewCount"> {
+    if (!value) {
+      return {};
+    }
+
+    const numbers = value.match(/[\d.]+/g);
+
+    if (!numbers) {
+      return {};
+    }
+
+    if (numbers.length >= 2) {
+      return {
+        rating: Number(numbers[0]),
+        reviewCount: Number(numbers[1]),
+      };
+    }
+
+    return {
+      reviewCount: Number(numbers[0]),
+    };
+  }
+
+  private createProductId(href: string): string {
+    const lastSegment = href.split("/").pop();
+
+    return lastSegment?.replace(".html", "") ?? href;
   }
 }
