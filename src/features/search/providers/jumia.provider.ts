@@ -1,13 +1,34 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import type { SearchResult } from "../models/search-result.model.js";
-import type { SearchProvider } from "./search-provider.interface.js";
+import type { Offer } from "../models/offer.model.js";
+import type { OfferProvider } from "./offer-provider.interface.js";
 
-export class JumiaProvider implements SearchProvider {
+/**
+ * Retrieves product offers from Jumia Nigeria.
+ *
+ * The provider is responsible only for data acquisition and
+ * normalization into the application's Offer model.
+ */
+export class JumiaProvider implements OfferProvider {
+  /**
+   * Name of the provider.
+   */
+  public readonly store = "Jumia";
+
+  /**
+   * Base URL for Jumia Nigeria.
+   */
   private static readonly BASE_URL = "https://www.jumia.com.ng";
 
-  public async search(query: string): Promise<SearchResult[]> {
+  /**
+   * Searches Jumia for products matching the supplied query.
+   *
+   * @param query Product search keyword.
+   *
+   * @returns Normalized Offer objects.
+   */
+  public async search(query: string): Promise<Offer[]> {
     const url = `${JumiaProvider.BASE_URL}/catalog/?q=${encodeURIComponent(query)}`;
 
     const response = await axios.get<string>(url, {
@@ -20,19 +41,15 @@ export class JumiaProvider implements SearchProvider {
 
     const $ = cheerio.load(response.data);
 
-    const results: SearchResult[] = [];
+    const offers: Offer[] = [];
 
     $("article.prd").each((_, element) => {
       const product = $(element);
 
       const title = product.find("h3.name").text().trim();
-
       const currentPriceText = product.find("div.prc").text().trim();
-
       const originalPriceText = product.find("div.old").text().trim();
-
       const discountText = product.find("div.bdg._dsct").text().trim();
-
       const ratingText = product.find("div.rev").text().trim();
 
       const image =
@@ -46,10 +63,8 @@ export class JumiaProvider implements SearchProvider {
         return;
       }
 
-      const productUrl = `${JumiaProvider.BASE_URL}${href}`;
-
-      results.push({
-        id: this.createProductId(href),
+      offers.push({
+        id: this.createOfferId(href),
         title,
         price: this.parsePrice(currentPriceText),
         currency: "NGN",
@@ -59,31 +74,34 @@ export class JumiaProvider implements SearchProvider {
         discountPercentage: this.parseDiscount(discountText),
         ...this.parseRating(ratingText),
         image,
-        url: productUrl,
-        store: "Jumia",
+        url: `${JumiaProvider.BASE_URL}${href}`,
+        store: this.store,
       });
     });
 
-    return results;
+    return offers;
   }
 
+  /**
+   * Converts a formatted price string into a number.
+   */
   private parsePrice(value: string): number {
     return Number(value.replace(/[^\d]/g, ""));
   }
 
+  /**
+   * Extracts the discount percentage.
+   */
   private parseDiscount(value: string): number | undefined {
-    if (!value) {
-      return undefined;
-    }
-
     const match = value.match(/\d+/);
 
     return match ? Number(match[0]) : undefined;
   }
 
-  private parseRating(
-    value: string,
-  ): Pick<SearchResult, "rating" | "reviewCount"> {
+  /**
+   * Parses product rating and review count.
+   */
+  private parseRating(value: string): Pick<Offer, "rating" | "reviewCount"> {
     if (!value) {
       return {};
     }
@@ -106,9 +124,10 @@ export class JumiaProvider implements SearchProvider {
     };
   }
 
-  private createProductId(href: string): string {
-    const lastSegment = href.split("/").pop();
-
-    return lastSegment?.replace(".html", "") ?? href;
+  /**
+   * Generates a stable offer identifier from the product URL.
+   */
+  private createOfferId(href: string): string {
+    return href.split("/").pop()?.replace(".html", "") ?? href;
   }
 }
