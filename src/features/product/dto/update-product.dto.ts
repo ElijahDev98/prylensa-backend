@@ -3,9 +3,6 @@
  * File: update-product.dto.ts
  * Project: Priciq Backend
  * Feature: Product
- *
- * Purpose:
- * Contract for updating a product.
  * -----------------------------------------------------------------------------
  */
 
