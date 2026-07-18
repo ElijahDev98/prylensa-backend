@@ -5,26 +5,38 @@
  * Feature: Product
  *
  * Purpose:
- * Maps Product domain models to API response DTOs.
+ * Maps Product Prisma entities, domain models, and response DTOs.
  * -----------------------------------------------------------------------------
  */
 
-import type { ProductModel } from "../models/product.model.js";
 import type { ProductResponseDto } from "../dto/product-response.dto.js";
+import type { ProductModel } from "../models/product.model.js";
+import type { ProductWithRelations } from "../types/product-prisma.type.js";
 
 export class ProductMapper {
   /**
-   * Maps a Product domain model to an API response DTO.
+   * Prisma → Domain Model
    */
-  public static toResponse(product: ProductModel): ProductResponseDto {
+  public static fromPrisma(product: ProductWithRelations): ProductModel {
+    const prices = product.offers.map((offer) => offer.currentPrice.toNumber());
+
+    const lowestPrice = prices.length > 0 ? Math.min(...prices) : null;
+
+    const highestPrice = prices.length > 0 ? Math.max(...prices) : null;
+
+    const averagePrice =
+      prices.length > 0
+        ? prices.reduce((sum, value) => sum + value, 0) / prices.length
+        : null;
+
+    const primaryImage = product.images.find((image) => image.isPrimary);
+
     return {
       id: product.id,
 
       name: product.name,
 
       description: product.description,
-
-      thumbnail: product.thumbnail,
 
       brand: {
         id: product.brand.id,
@@ -36,18 +48,20 @@ export class ProductMapper {
         name: product.category.name,
       },
 
+      thumbnail: primaryImage?.url ?? product.thumbnailUrl ?? null,
+
       images: product.images.map((image) => ({
         id: image.id,
-        imageUrl: image.imageUrl,
+        imageUrl: image.url,
         altText: image.altText,
         isPrimary: image.isPrimary,
       })),
 
       pricing: {
-        lowestPrice: product.pricing.lowestPrice,
-        highestPrice: product.pricing.highestPrice,
-        averagePrice: product.pricing.averagePrice,
-        offersCount: product.pricing.offersCount,
+        lowestPrice,
+        highestPrice,
+        averagePrice,
+        offersCount: prices.length,
       },
 
       createdAt: product.createdAt,
@@ -57,7 +71,43 @@ export class ProductMapper {
   }
 
   /**
-   * Maps multiple Product domain models.
+   * Domain Model → Response DTO
+   */
+  public static toResponse(product: ProductModel): ProductResponseDto {
+    return {
+      id: product.id,
+
+      name: product.name,
+
+      description: product.description,
+
+      thumbnail: product.thumbnail,
+
+      brand: product.brand,
+
+      category: product.category,
+
+      images: product.images,
+
+      pricing: product.pricing,
+
+      createdAt: product.createdAt,
+
+      updatedAt: product.updatedAt,
+    };
+  }
+
+  /**
+   * Prisma[] → Domain Models
+   */
+  public static fromPrismaList(
+    products: ProductWithRelations[],
+  ): ProductModel[] {
+    return products.map(ProductMapper.fromPrisma);
+  }
+
+  /**
+   * Domain Models → Response DTOs
    */
   public static toResponseList(products: ProductModel[]): ProductResponseDto[] {
     return products.map(ProductMapper.toResponse);
