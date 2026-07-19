@@ -4,62 +4,46 @@
  * Module: Marketplace
  *
  * Description:
- * Coordinates marketplace providers and exposes a unified data access layer
- * for marketplace operations.
+ * Coordinates marketplace providers and exposes a unified interface for
+ * retrieving marketplace offers.
  *
  * Responsibilities:
- * - Delegate requests to marketplace providers.
- * - Hide provider implementations from the service layer.
- * - Support multiple marketplace providers in the future.
+ * - Execute searches across registered marketplace providers.
+ * - Aggregate offers into a single collection.
+ * - Isolate higher layers from provider implementations.
+ * - Continue searching even if one provider fails.
  * -----------------------------------------------------------------------------
  */
 
-import type { Offer } from "../models/Offer.js";
-import type { Product } from "../models/Product.js";
-import type { MarketplaceProvider } from "../providers/MarketplaceProvider.js";
+import { Offer } from "../models/Offer.js";
 
-import { KongaProvider } from "../providers/konga/KongaProvider.js";
+import { MarketplaceProvider } from "../providers/MarketplaceProvider.js";
 
 export class MarketplaceRepository {
   /**
    * Registered marketplace providers.
    */
-  private readonly providers: MarketplaceProvider[];
-
-  constructor() {
-    this.providers = [new KongaProvider()];
-  }
+  constructor(private readonly providers: MarketplaceProvider[]) {}
 
   /**
-   * Searches all registered marketplaces.
+   * Searches every registered marketplace.
    *
-   * @param query Search keyword.
-   * @returns Combined marketplace offers.
+   * @param query User search keyword.
+   * @returns Aggregated marketplace offers.
    */
   async search(query: string): Promise<Offer[]> {
-    const results = await Promise.all(
+    const results = await Promise.allSettled(
       this.providers.map((provider) => provider.search(query)),
     );
 
-    return results.flat();
-  }
+    const offers: Offer[] = [];
 
-  /**
-   * Retrieves product details from a specific provider.
-   *
-   * @param providerName Marketplace name.
-   * @param productId Product identifier.
-   * @returns Product details.
-   */
-  async getProduct(providerName: string, productId: string): Promise<Product> {
-    const provider = this.providers.find(
-      (provider) => provider.name.toLowerCase() === providerName.toLowerCase(),
-    );
-
-    if (!provider) {
-      throw new Error(`Marketplace '${providerName}' is not registered.`);
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        offers.push(...result.value);
+      }
     }
 
-    return provider.getProduct(productId);
+    return offers;
   }
 }
