@@ -4,17 +4,18 @@
  * Module: Marketplace
  *
  * Description:
- * Composes the Marketplace feature by constructing and wiring together all
- * dependencies required by the Marketplace module.
+ * Marketplace feature composition root.
  *
  * Responsibilities:
  * - Instantiate marketplace providers.
- * - Construct the repository.
- * - Construct the service.
- * - Construct the controller.
+ * - Configure repository.
+ * - Configure service.
+ * - Configure controller.
  * - Export the configured controller.
  *
- * This file serves as the composition root for the Marketplace module.
+ * Notes:
+ * - This is the only file responsible for wiring Marketplace dependencies.
+ * - No business logic should exist here.
  * -----------------------------------------------------------------------------
  */
 
@@ -27,16 +28,19 @@ import { SlotProvider } from "./providers/slot/SlotProvider.js";
 
 /**
  * Registered marketplace providers.
+ *
+ * Adding a new marketplace only requires
+ * registering it here.
  */
 const providers = [new KongaProvider(), new SlotProvider()];
 
 /**
- * Marketplace repository.
+ * Repository.
  */
 const repository = new MarketplaceRepository(providers);
 
 /**
- * Marketplace service.
+ * Service.
  */
 const service = new MarketplaceService(repository);
 

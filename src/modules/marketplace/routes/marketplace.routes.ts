@@ -4,11 +4,11 @@
  * Module: Marketplace
  *
  * Description:
- * Registers Marketplace HTTP endpoints.
+ * Marketplace HTTP routes.
  *
  * Responsibilities:
- * - Map HTTP routes to controller actions.
- * - Delegate all processing to the controller.
+ * - Register Marketplace endpoints.
+ * - Delegate request handling to the controller.
  * -----------------------------------------------------------------------------
  */
 
@@ -19,7 +19,7 @@ import { marketplaceController } from "../marketplace.module.js";
 const router = Router();
 
 /**
- * GET /search?q=iphone
+ * GET /api/v1/marketplace/search?q=iphone
  */
 router.get("/search", marketplaceController.search.bind(marketplaceController));
 
