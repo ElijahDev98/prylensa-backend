@@ -7,21 +7,26 @@
  * Concrete implementation of the MarketplaceProvider interface for Konga.
  *
  * Responsibilities:
- * - Communicate with Konga's external APIs.
- * - Retrieve search results.
- * - Retrieve product details.
- * - Convert external responses into domain models.
- *
- * NOTE:
- * This class should never expose Konga-specific DTOs outside this layer.
+ * - Communicate with the Konga Search API.
+ * - Execute product searches.
+ * - Convert provider DTOs into Offer domain models.
+ * - Never expose provider DTOs outside this layer.
  * -----------------------------------------------------------------------------
  */
 
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { MarketplaceProvider } from "../MarketplaceProvider.js";
+
 import { Offer } from "../../models/Offer.js";
 import { Product } from "../../models/Product.js";
+
+import { KONGA_CONFIG } from "./config/konga.config.js";
+
+import { KongaOfferMapper } from "./mappers/KongaOfferMapper.js";
+
+import { KongaSearchRequestDto } from "./dto/KongaSearchRequestDto.js";
+import { KongaSearchResponseDto } from "./dto/KongaSearchResponseDto.js";
 
 export class KongaProvider implements MarketplaceProvider {
   /**
@@ -30,38 +35,64 @@ export class KongaProvider implements MarketplaceProvider {
   public readonly name = "Konga";
 
   /**
-   * HTTP client used for communicating with Konga Search API.
+   * HTTP client.
    */
   private readonly client: AxiosInstance;
 
-  /**
-   * Creates a new Konga provider.
-   */
   constructor() {
     this.client = axios.create({
-      baseURL: "https://kss.igbimo.com",
-      timeout: 10000,
+      baseURL: KONGA_CONFIG.BASE_URL,
+      timeout: KONGA_CONFIG.REQUEST_TIMEOUT,
       headers: {
         "Content-Type": "application/json",
+        "kss-api-key": KONGA_CONFIG.API_KEY,
       },
     });
   }
 
   /**
-   * Searches Konga products.
-   *
-   * TODO:
-   * Implement in the next milestone.
+   * Searches products on Konga.
    */
-  async search(_query: string): Promise<Offer[]> {
-    throw new Error("Method not implemented.");
+  async search(query: string): Promise<Offer[]> {
+    const request: KongaSearchRequestDto = {
+      name: KONGA_CONFIG.SEARCH_INDEX,
+      q: query,
+      page: KONGA_CONFIG.DEFAULT_PAGE,
+      hitPerPage: KONGA_CONFIG.DEFAULT_PAGE_SIZE,
+      facet_by: KONGA_CONFIG.DEFAULT_FACET,
+    };
+
+    try {
+      const response = await this.client.post<KongaSearchResponseDto>(
+        KONGA_CONFIG.SEARCH_ENDPOINT,
+        request,
+      );
+
+      const products = response.data.data.hits ?? [];
+
+      return KongaOfferMapper.toOffers(products);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status ?? "Unknown";
+        const message =
+          (error.response?.data as { message?: string } | undefined)?.message ??
+          error.message;
+
+        throw new Error(`Konga search failed (${status}): ${message}`);
+      }
+
+      throw new Error(
+        `Unexpected error while searching Konga: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
   }
 
   /**
-   * Retrieves detailed product information.
+   * Retrieves a product by its marketplace identifier.
    *
-   * TODO:
-   * Implement in a later milestone.
+   * Will be implemented in a later milestone.
    */
   async getProduct(_productId: string): Promise<Product> {
     throw new Error("Method not implemented.");
