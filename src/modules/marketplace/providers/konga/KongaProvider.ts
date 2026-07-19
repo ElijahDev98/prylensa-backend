@@ -53,7 +53,7 @@ export class KongaProvider implements MarketplaceProvider {
    * TODO:
    * Implement in the next milestone.
    */
-  async search(query: string): Promise<Offer[]> {
+  async search(_query: string): Promise<Offer[]> {
     throw new Error("Method not implemented.");
   }
 
@@ -63,7 +63,7 @@ export class KongaProvider implements MarketplaceProvider {
    * TODO:
    * Implement in a later milestone.
    */
-  async getProduct(productId: string): Promise<Product> {
+  async getProduct(_productId: string): Promise<Product> {
     throw new Error("Method not implemented.");
   }
 }
