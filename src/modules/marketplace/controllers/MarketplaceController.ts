@@ -4,116 +4,50 @@
  * Module: Marketplace
  *
  * Description:
- * Handles HTTP requests related to marketplace operations.
+ * Handles HTTP requests for marketplace operations.
  *
  * Responsibilities:
- * - Receive and validate incoming HTTP requests.
+ * - Receive HTTP requests.
+ * - Validate request parameters.
  * - Delegate business logic to MarketplaceService.
- * - Return standardized JSON responses.
- * - Forward unexpected errors to Express error middleware.
+ * - Return HTTP responses.
  * -----------------------------------------------------------------------------
  */
 
-import type { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 import { MarketplaceService } from "../services/MarketplaceService.js";
 
-/**
- * Request body for marketplace search.
- */
-interface SearchRequestBody {
-  query: string;
-}
-
-/**
- * Route parameters for retrieving a product.
- */
-interface ProductParams {
-  marketplace: string;
-  productId: string;
-}
-
-/**
- * Typed request for search endpoint.
- */
-type SearchRequest = Request<Record<string, never>, unknown, SearchRequestBody>;
-
-/**
- * Typed request for product details endpoint.
- */
-type ProductRequest = Request<ProductParams>;
-
 export class MarketplaceController {
-  /**
-   * Marketplace business service.
-   */
-  private readonly marketplaceService: MarketplaceService;
-
-  constructor(service?: MarketplaceService) {
-    this.marketplaceService = service ?? new MarketplaceService();
-  }
+  constructor(private readonly service: MarketplaceService) {}
 
   /**
-   * ---------------------------------------------------------------------------
-   * Search Products
+   * Searches all configured marketplaces.
    *
-   * POST /marketplace/search
-   * ---------------------------------------------------------------------------
+   * GET /marketplace/search?q=iphone
    */
-  public search = async (
-    req: SearchRequest,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  async search(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { query } = req.body;
+      const query = String(req.query.q ?? "").trim();
 
-      if (!query.trim()) {
+      if (!query) {
         res.status(400).json({
           success: false,
-          message: "Search query is required.",
+          message: "Query parameter 'q' is required.",
         });
 
         return;
       }
 
-      const offers = await this.marketplaceService.search(query);
+      const offers = await this.service.search(query);
 
       res.status(200).json({
         success: true,
+        count: offers.length,
         data: offers,
       });
     } catch (error) {
       next(error);
     }
-  };
-
-  /**
-   * ---------------------------------------------------------------------------
-   * Get Product Details
-   *
-   * GET /marketplace/products/:marketplace/:productId
-   * ---------------------------------------------------------------------------
-   */
-  public getProduct = async (
-    req: ProductRequest,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { marketplace, productId } = req.params;
-
-      const product = await this.marketplaceService.getProduct(
-        marketplace,
-        productId,
-      );
-
-      res.status(200).json({
-        success: true,
-        data: product,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+  }
 }
