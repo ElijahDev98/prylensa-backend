@@ -1,66 +1,68 @@
 /**
  * -----------------------------------------------------------------------------
  * File: KongaOfferMapper.ts
- * Module: Marketplace / Konga
+ * Module: Marketplace / Konga Provider
  *
  * Description:
- * Maps Konga Search API DTOs into the application's Offer domain model.
+ * Maps Konga provider DTOs into the application's Offer domain model.
  *
  * Responsibilities:
- * - Convert Konga-specific DTOs into Offer objects.
- * - Keep external API contracts isolated from the domain layer.
- * - Ensure the rest of the application remains marketplace-agnostic.
+ * - Isolate the Konga API contract.
+ * - Convert provider-specific fields into Offer.
+ * - Contain no networking or business logic.
  * -----------------------------------------------------------------------------
  */
 
 import type { Offer } from "../../../models/Offer.js";
 import type { KongaSearchItemDto } from "../dto/KongaSearchResponseDto.js";
 
-/**
- * Maps Konga search results into domain offers.
- */
+const KONGA_BASE_URL = "https://www.konga.com/product/";
+const KONGA_IMAGE_BASE_URL =
+  "https://www-konga-com-res.cloudinary.com/image/upload";
+
 export class KongaOfferMapper {
   /**
-   * Converts a single Konga search item into an Offer.
-   *
-   * @param item Konga search result.
-   * @returns Domain offer.
+   * Maps a single Konga search result into an Offer.
    */
-  public static toOffer(item: KongaSearchItemDto): Offer {
+  static toOffer(product: KongaSearchItemDto): Offer {
+    const discountedPrice =
+      product.special_price !== null && product.special_price !== undefined
+        ? product.special_price
+        : product.price;
+
     return {
-      id: item.id,
+      id: product.objectid,
 
-      productId: item.id,
+      productId: product.objectid,
 
-      title: item.name,
+      title: product.name,
 
-      brand: item.brand,
+      brand: product.brand,
 
-      price: item.price,
+      price: discountedPrice,
 
-      originalPrice: item.originalPrice,
+      originalPrice: product.special_price != null ? product.price : undefined,
 
-      currency: item.currency ?? "NGN",
+      currency: "NGN",
 
-      imageUrl: item.image ?? "",
+      imageUrl: product.image_thumbnail_path
+        ? `${KONGA_IMAGE_BASE_URL}${product.image_thumbnail_path}`
+        : "",
 
-      productUrl: item.url ?? "",
+      productUrl: product.url_key ? `${KONGA_BASE_URL}${product.url_key}` : "",
 
       marketplace: "Konga",
 
-      inStock: item.inStock ?? true,
+      inStock: product.stock?.in_stock === 1,
 
-      rating: item.rating,
+      rating: product.rating?.average_rating,
     };
   }
 
   /**
-   * Converts multiple Konga search items into domain offers.
-   *
-   * @param items Collection of Konga search results.
-   * @returns Collection of domain offers.
+   * Maps multiple Konga search results.
    */
-  public static toOffers(items: readonly KongaSearchItemDto[]): Offer[] {
-    return items.map(KongaOfferMapper.toOffer);
+  static toOffers(products: KongaSearchItemDto[]): Offer[] {
+    return products.map((product) => this.toOffer(product));
   }
 }

@@ -1,18 +1,15 @@
 /**
  * -----------------------------------------------------------------------------
  * File: KongaSearchResponseDto.ts
- * Module: Marketplace / Konga
+ * Module: Marketplace / Konga Provider
  *
  * Description:
- * Represents the response returned by the Konga Search API.
+ * Models the response returned by the Konga Search API.
  *
- * This DTO mirrors the external API contract and must remain isolated within
- * the Konga provider. It should never be exposed outside the provider layer.
- *
- * Responsibilities:
- * - Model the Konga search response.
- * - Preserve the external API schema.
- * - Serve as the input for KongaOfferMapper.
+ * IMPORTANT:
+ * This DTO mirrors the provider's response as closely as possible. It should
+ * never be exposed outside the provider layer. All conversions into the
+ * application's domain models must be performed by KongaOfferMapper.
  * -----------------------------------------------------------------------------
  */
 
@@ -20,35 +17,39 @@
  * Root response returned by the Konga Search API.
  */
 export interface KongaSearchResponseDto {
-  /**
-   * Search results.
-   */
-  data: KongaSearchItemDto[];
-
-  /**
-   * Total number of matching products.
-   */
-  total?: number;
-
-  /**
-   * Current page number.
-   */
-  page?: number;
-
-  /**
-   * Number of results returned.
-   */
-  hitPerPage?: number;
+  status?: string;
+  message?: string;
+  data: KongaSearchDataDto;
 }
 
 /**
- * Represents a single Konga search result.
+ * Search result container.
+ */
+export interface KongaSearchDataDto {
+  query_string?: string;
+  total?: number;
+  page?: number;
+  hitsPerPage?: number;
+
+  /**
+   * Products returned by the search.
+   */
+  hits: KongaSearchItemDto[];
+}
+
+/**
+ * Represents a single product returned by Konga.
  */
 export interface KongaSearchItemDto {
   /**
-   * Marketplace product identifier.
+   * Marketplace identifier.
    */
-  id: string;
+  objectid: string;
+
+  /**
+   * Marketplace SKU.
+   */
+  sku?: string;
 
   /**
    * Product title.
@@ -56,42 +57,109 @@ export interface KongaSearchItemDto {
   name: string;
 
   /**
-   * Product brand.
+   * Brand.
    */
   brand?: string;
 
   /**
-   * Current selling price.
+   * Selling price.
    */
   price: number;
 
   /**
-   * Original price before discount.
+   * Discounted price.
    */
-  originalPrice?: number;
+  special_price?: number | null;
 
   /**
-   * Currency code.
+   * Product URL slug.
    */
-  currency?: string;
+  url_key?: string;
 
   /**
-   * Primary product image.
+   * Thumbnail path returned by Konga.
    */
-  image?: string;
+  image_thumbnail_path?: string;
 
   /**
-   * Product URL.
+   * Product type.
    */
-  url?: string;
+  product_type?: string;
 
   /**
-   * Product availability.
+   * Product description.
    */
-  inStock?: boolean;
+  description?: {
+    result?: string;
+  };
 
   /**
-   * Average customer rating.
+   * Seller information.
    */
-  rating?: number;
+  seller?: KongaSellerDto;
+
+  /**
+   * Stock information.
+   */
+  stock?: KongaStockDto;
+
+  /**
+   * Customer ratings.
+   */
+  rating?: KongaRatingDto;
+
+  /**
+   * Product specifications.
+   */
+  attributes?: KongaAttributesDto;
+
+  /**
+   * Primary category.
+   */
+  category?: string;
+
+  /**
+   * Category hierarchy.
+   */
+  categories?: Record<string, string>;
+}
+
+/**
+ * Seller information.
+ */
+export interface KongaSellerDto {
+  id?: number;
+  name?: string;
+  city?: string;
+  state?: string;
+  logo?: string;
+  is_konga?: number;
+}
+
+/**
+ * Stock information.
+ */
+export interface KongaStockDto {
+  in_stock?: number;
+  quantity?: number;
+  quantity_sold?: number;
+  min_sale_qty?: number;
+  max_sale_qty?: number;
+}
+
+/**
+ * Rating information.
+ */
+export interface KongaRatingDto {
+  average_rating?: number;
+  total_rating?: number;
+}
+
+/**
+ * Product attributes.
+ *
+ * The available keys vary by category, so we allow arbitrary string keys.
+ */
+export interface KongaAttributesDto {
+  [key: string]: string[] | undefined;
 }
