@@ -1,53 +1,97 @@
 /**
  * -----------------------------------------------------------------------------
  * File: KongaSearchResponseDto.ts
- * Module: Marketplace
+ * Module: Marketplace / Konga
  *
  * Description:
- * Defines the response contract returned by Konga's Search API.
+ * Represents the response returned by the Konga Search API.
  *
- * IMPORTANT:
- * This DTO mirrors the external API response and should never leave the
- * provider layer. It must be mapped into domain models before use.
+ * This DTO mirrors the external API contract and must remain isolated within
+ * the Konga provider. It should never be exposed outside the provider layer.
+ *
+ * Responsibilities:
+ * - Model the Konga search response.
+ * - Preserve the external API schema.
+ * - Serve as the input for KongaOfferMapper.
  * -----------------------------------------------------------------------------
  */
 
 /**
- * Root search response.
+ * Root response returned by the Konga Search API.
  */
 export interface KongaSearchResponseDto {
-  found: number;
-  hits: KongaSearchHitDto[];
+  /**
+   * Search results.
+   */
+  data: KongaSearchItemDto[];
+
+  /**
+   * Total number of matching products.
+   */
+  total?: number;
+
+  /**
+   * Current page number.
+   */
+  page?: number;
+
+  /**
+   * Number of results returned.
+   */
+  hitPerPage?: number;
 }
 
 /**
- * Represents a single product returned by the search API.
+ * Represents a single Konga search result.
  */
-export interface KongaSearchHitDto {
-  document: KongaProductDocumentDto;
-}
-
-/**
- * Product document returned by Konga.
- */
-export interface KongaProductDocumentDto {
+export interface KongaSearchItemDto {
+  /**
+   * Marketplace product identifier.
+   */
   id: string;
 
-  title: string;
+  /**
+   * Product title.
+   */
+  name: string;
 
-  image?: string;
+  /**
+   * Product brand.
+   */
+  brand?: string;
 
+  /**
+   * Current selling price.
+   */
   price: number;
 
-  original_price?: number;
+  /**
+   * Original price before discount.
+   */
+  originalPrice?: number;
 
+  /**
+   * Currency code.
+   */
   currency?: string;
 
+  /**
+   * Primary product image.
+   */
+  image?: string;
+
+  /**
+   * Product URL.
+   */
   url?: string;
 
-  in_stock?: boolean;
+  /**
+   * Product availability.
+   */
+  inStock?: boolean;
 
-  attributes?: {
-    brand?: string;
-  };
+  /**
+   * Average customer rating.
+   */
+  rating?: number;
 }
