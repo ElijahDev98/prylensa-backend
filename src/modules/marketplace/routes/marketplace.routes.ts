@@ -4,63 +4,41 @@
  * Module: Marketplace
  *
  * Description:
- * Defines all HTTP routes for marketplace-related operations.
+ * Configures Marketplace HTTP routes.
  *
  * Responsibilities:
- * - Register marketplace endpoints.
- * - Delegate requests to MarketplaceController.
- * - Keep routing separate from controllers and business logic.
- *
- * Endpoints:
- * POST   /search
- * GET    /products/:marketplace/:productId
+ * - Wire application dependencies.
+ * - Register Marketplace endpoints.
+ * - Export an Express Router.
  * -----------------------------------------------------------------------------
  */
 
 import { Router } from "express";
 
 import { MarketplaceController } from "../controllers/MarketplaceController.js";
+import { MarketplaceService } from "../services/MarketplaceService.js";
+import { MarketplaceRepository } from "../repositories/MarketplaceRepository.js";
+
+import { KongaProvider } from "../providers/konga/KongaProvider.js";
+import { SlotProvider } from "../providers/slot/SlotProvider.js";
+
+const router = Router();
 
 /**
- * Express router for Marketplace module.
+ * Dependency graph
  */
-const marketplaceRouter = Router();
+const repository = new MarketplaceRepository([
+  new KongaProvider(),
+  new SlotProvider(),
+]);
+
+const service = new MarketplaceService(repository);
+
+const controller = new MarketplaceController(service);
 
 /**
- * Marketplace controller instance.
+ * GET /marketplace/search?q=iphone
  */
-const marketplaceController = new MarketplaceController();
+router.get("/search", controller.search.bind(controller));
 
-/**
- * -----------------------------------------------------------------------------
- * Search Products
- *
- * POST /api/marketplace/search
- *
- * Request Body:
- * {
- *   "query": "Samsung A17"
- * }
- * -----------------------------------------------------------------------------
- */
-marketplaceRouter.post("/search", marketplaceController.search);
-
-/**
- * -----------------------------------------------------------------------------
- * Get Product Details
- *
- * GET /api/marketplace/products/:marketplace/:productId
- *
- * Example:
- * GET /api/marketplace/products/konga/123456
- * -----------------------------------------------------------------------------
- */
-marketplaceRouter.get(
-  "/products/:marketplace/:productId",
-  marketplaceController.getProduct,
-);
-
-/**
- * Export Marketplace router.
- */
-export default marketplaceRouter;
+export default router;
