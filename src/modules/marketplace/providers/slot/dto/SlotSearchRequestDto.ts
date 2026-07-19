@@ -1,26 +1,27 @@
 /**
- * Slot Search Request DTO
+ * -----------------------------------------------------------------------------
+ * File: SlotSearchRequestDto.ts
+ * Module: Marketplace / Slot
  *
- * Represents the query parameters accepted by the
- * Slot product search endpoint.
+ * Description:
+ * Query parameters accepted by the official Slot search endpoint.
  *
  * Endpoint:
- * GET /api/v1/products
+ * GET /api/v1/product-search
+ * -----------------------------------------------------------------------------
  */
+
 export interface SlotSearchRequestDto {
   /**
-   * Product keyword to search for.
+   * Product search keyword.
    *
    * Example:
-   * "iPhone 17"
+   * samsung
    */
   q: string;
 
   /**
-   * Page number for paginated results.
-   *
-   * Default:
-   * 1
+   * Page number.
    */
   page: number;
 
@@ -28,22 +29,7 @@ export interface SlotSearchRequestDto {
    * Number of products returned per page.
    *
    * Default:
-   * 20
+   * 6
    */
   per_page: number;
-
-  /**
-   * Optional sort order.
-   */
-  sort?: string;
-
-  /**
-   * Optional minimum price filter.
-   */
-  min_price?: number;
-
-  /**
-   * Optional maximum price filter.
-   */
-  max_price?: number;
 }

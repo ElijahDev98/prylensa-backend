@@ -1,50 +1,83 @@
 /**
- * Slot Marketplace API Configuration
+ * -----------------------------------------------------------------------------
+ * File: slot.config.ts
+ * Module: Marketplace / Slot
  *
- * Centralizes all configuration values required to communicate
- * with the Slot REST API.
+ * Description:
+ * Centralized configuration for the Slot marketplace integration.
  *
- * Keeping these values in one place makes the provider easier
- * to maintain and prevents hardcoded strings throughout the codebase.
+ * Responsibilities:
+ * - API endpoints
+ * - HTTP configuration
+ * - Search defaults
+ * - Provider-specific request headers
+ * - Marketplace visibility identifiers
+ *
+ * Notes:
+ * Slot uses different visibility identifiers depending on the resource being
+ * accessed. These values were identified by reverse engineering the official
+ * Slot frontend.
+ * -----------------------------------------------------------------------------
  */
+
 export const SLOT_CONFIG = {
   /**
    * Base URL of the Slot REST API.
-   *
-   * Example:
-   * https://api-prod.slot.ng/api/v1/products
    */
   BASE_URL: "https://api-prod.slot.ng",
 
   /**
-   * Product search endpoint.
-   *
-   * Supports query parameters such as:
-   * - q
-   * - page
-   * - per_page
-   * - sort (optional)
-   * - min_price (optional)
-   * - max_price (optional)
+   * HTTP client configuration.
    */
-  SEARCH_ENDPOINT: "/api/v1/products",
+  HTTP: {
+    /**
+     * Maximum request timeout.
+     */
+    TIMEOUT: 10_000,
+
+    /**
+     * Match the behaviour of the official Slot frontend.
+     */
+    WITH_CREDENTIALS: true,
+
+    /**
+     * Default headers.
+     */
+    HEADERS: {
+      Accept: "application/json, text/plain, */*",
+
+      Origin: "https://slot.ng",
+
+      Referer: "https://slot.ng/",
+
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    },
+  },
 
   /**
-   * Maximum time (in milliseconds) to wait
-   * for a response before the request is aborted.
+   * Slot visibility identifiers.
    */
-  REQUEST_TIMEOUT: 10_000,
+  VISIBILITY: {
+    /**
+     * Used by catalogue/product endpoints.
+     */
+    CATALOG: "01K0EQ4RY4WFZEKJ0XFW3EDY57",
+
+    /**
+     * Used by the product search endpoint.
+     */
+    SEARCH: "01K0EQ4RYA5553TH5RAY654EDU",
+  },
 
   /**
-   * Default page number used when none is supplied.
+   * Product search configuration.
    */
-  DEFAULT_PAGE: 1,
+  SEARCH: {
+    ENDPOINT: "/api/v1/product-search",
 
-  /**
-   * Default number of products returned per request.
-   *
-   * This matches the default value observed from
-   * the Slot API.
-   */
-  DEFAULT_PAGE_SIZE: 20,
+    DEFAULT_PAGE: 1,
+
+    DEFAULT_PAGE_SIZE: 6,
+  },
 } as const;

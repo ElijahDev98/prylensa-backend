@@ -41,6 +41,9 @@ export class MarketplaceRepository {
     for (const result of results) {
       if (result.status === "fulfilled") {
         offers.push(...result.value);
+      } else {
+        console.error("Marketplace Provider Failed");
+        console.error(result.reason);
       }
     }
 

@@ -59,7 +59,7 @@ export interface SlotLinksDto {
  * Slot product search endpoint.
  *
  * Endpoint:
- * GET /api/v1/products
+ * GET /api/v1/product-search
  */
 export interface SlotSearchResponseDto {
   success: boolean;
