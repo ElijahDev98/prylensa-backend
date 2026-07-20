@@ -3,26 +3,26 @@
  * Jumia Search Parser
  * -----------------------------------------------------------------------------
  *
- * Responsible for extracting embedded marketplace product data from Jumia's
- * HTML search fragment.
+ * Converts Jumia's HTML search fragment into strongly typed DTOs.
  *
  * Responsibilities:
+ *  - Parse HTML
+ *  - Extract embedded JSON
+ *  - Deserialize JSON
+ *  - Return provider DTOs
  *
- * 1. Parse the HTML fragment.
- * 2. Locate embedded product metadata.
- * 3. Extract the raw JSON payload.
- *
- * JSON deserialization is implemented in the next phase.
+ * No business logic belongs here.
  * -----------------------------------------------------------------------------
  */
 
 import * as cheerio from "cheerio";
 
+import type { JumiaProductDto } from "../dto/jumia-product.dto.js";
 import type { JumiaSearchResponseDto } from "../dto/jumia-search-response.dto.js";
 
 export class JumiaSearchParser {
   /**
-   * Parses a Jumia search fragment.
+   * Parses the Jumia search HTML fragment.
    */
   public parse(html: string): JumiaSearchResponseDto {
     const $ = cheerio.load(html);
@@ -39,12 +39,20 @@ export class JumiaSearchParser {
       throw new Error("Embedded Jumia product metadata is empty.");
     }
 
-    /**
-     * Phase 2.2
-     *
-     * Decode HTML entities.
-     * Deserialize JSON.
-     */
-    throw new Error("Jumia product extraction completed.");
+    let products: JumiaProductDto[];
+
+    try {
+      products = JSON.parse(rawProducts) as JumiaProductDto[];
+    } catch (error) {
+      throw new Error(
+        `Failed to deserialize Jumia product metadata: ${
+          error instanceof Error ? error.message : "Unknown parsing error"
+        }`,
+      );
+    }
+
+    return {
+      products,
+    };
   }
 }
