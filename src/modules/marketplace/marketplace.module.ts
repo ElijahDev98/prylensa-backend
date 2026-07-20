@@ -23,6 +23,7 @@ import { MarketplaceController } from "./controllers/MarketplaceController.js";
 import { MarketplaceService } from "./services/MarketplaceService.js";
 import { MarketplaceRepository } from "./repositories/MarketplaceRepository.js";
 
+import { JumiaProvider } from "./providers/jumia/JumiaProvider.js";
 import { KongaProvider } from "./providers/konga/KongaProvider.js";
 import { SlotProvider } from "./providers/slot/SlotProvider.js";
 
@@ -32,7 +33,11 @@ import { SlotProvider } from "./providers/slot/SlotProvider.js";
  * Adding a new marketplace only requires
  * registering it here.
  */
-const providers = [new KongaProvider(), new SlotProvider()];
+const providers = [
+  new KongaProvider(),
+  new SlotProvider(),
+  new JumiaProvider(),
+];
 
 /**
  * Repository.
