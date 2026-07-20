@@ -52,6 +52,8 @@ export class JumiaProvider implements MarketplaceProvider {
    */
   async search(query: string): Promise<Offer[]> {
     try {
+      console.log("[Jumia] Searching:", query);
+
       const response = await this.client.get<string>(
         JUMIA_CONFIG.SEARCH.ENDPOINT,
         {
@@ -67,9 +69,22 @@ export class JumiaProvider implements MarketplaceProvider {
         },
       );
 
+      console.log("[Jumia] Response:");
+      console.log(response.data);
+
       const searchResult = this.parser.parse(response.data);
 
-      return this.mapper.mapMany(searchResult.products);
+      console.log("[Jumia] Parsed Products:", searchResult.products.length);
+
+      const offers = this.mapper.mapMany(searchResult.products);
+
+      console.log("[Jumia] Mapped Offers:", offers.length);
+
+      if (offers.length > 0) {
+        console.log("[Jumia] First Offer:", offers[0]);
+      }
+
+      return offers;
     } catch (error) {
       if (error instanceof AxiosError) {
         throw new Error(
