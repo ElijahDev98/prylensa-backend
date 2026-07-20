@@ -12,8 +12,8 @@
  * -----------------------------------------------------------------------------
  */
 
-import { JumiaPriceDto } from "./jumia-price.dto";
-import { JumiaRatingDto } from "./jumia-rating.dto";
+import { JumiaPriceDto } from "./jumia-price.dto.js";
+import { JumiaRatingDto } from "./jumia-rating.dto.js";
 
 export interface JumiaProductDto {
   /**

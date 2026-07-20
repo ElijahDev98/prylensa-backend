@@ -1,9 +1,36 @@
 /**
+ * -----------------------------------------------------------------------------
+ * File: SlotSearchResponseDto.ts
+ * Module: Marketplace / Slot
+ *
+ * Description:
+ * DTOs representing the response returned by the official Slot search API.
+ *
+ * Endpoint:
+ * GET /api/v1/product-search
+ * -----------------------------------------------------------------------------
+ */
+
+/**
+ * Product label returned by Slot.
+ */
+export interface SlotLabelDto {
+  name: string | null;
+
+  background_color: string | null;
+
+  label_color: string | null;
+}
+
+/**
  * Represents a single product returned by the
  * Slot search endpoint.
  */
 export interface SlotProductDto {
-  id: number;
+  /**
+   * Slot uses ULIDs instead of numeric identifiers.
+   */
+  id: string;
 
   name: string;
 
@@ -11,17 +38,32 @@ export interface SlotProductDto {
 
   slug: string;
 
-  brand: string;
+  /**
+   * Brand is optional.
+   */
+  brand: string | null;
 
   short_description: string;
 
-  original_price: number;
+  /**
+   * Can be null when no previous price exists.
+   */
+  original_price: number | null;
 
   price: number;
 
-  discount_percentage: number;
+  /**
+   * Can be null when no discount is applied.
+   */
+  discount_percentage: number | null;
 
   image_link: string;
+
+  /**
+   * Present in the API although not currently used
+   * by the mapper.
+   */
+  label: SlotLabelDto;
 
   status: string;
 
@@ -35,9 +77,22 @@ export interface SlotProductDto {
 export interface SlotMetaDto {
   current_page: number;
 
+  from: number;
+
   last_page: number;
 
+  links: {
+    url: string | null;
+    label: string;
+    page: number | null;
+    active: boolean;
+  }[];
+
+  path: string;
+
   per_page: number;
+
+  to: number;
 
   total: number;
 }
@@ -51,15 +106,14 @@ export interface SlotLinksDto {
 
   last: string;
 
+  prev: string | null;
+
   next: string | null;
 }
 
 /**
  * Complete response returned by the
  * Slot product search endpoint.
- *
- * Endpoint:
- * GET /api/v1/product-search
  */
 export interface SlotSearchResponseDto {
   success: boolean;

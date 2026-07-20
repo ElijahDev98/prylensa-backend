@@ -22,7 +22,7 @@
  * -----------------------------------------------------------------------------
  */
 
-import { JumiaProductDto } from "./jumia-product.dto";
+import { JumiaProductDto } from "./jumia-product.dto.js";
 
 export interface JumiaSearchResponseDto {
   /**

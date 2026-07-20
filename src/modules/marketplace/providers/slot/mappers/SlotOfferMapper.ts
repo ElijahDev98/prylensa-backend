@@ -33,17 +33,17 @@ export class SlotOfferMapper {
    */
   public static toOffer(product: SlotProductDto): Offer {
     return {
-      id: String(product.id),
+      id: product.id,
 
       productId: product.sku,
 
       title: product.name,
 
-      brand: product.brand,
+      brand: product.brand ?? undefined,
 
       price: product.price,
 
-      originalPrice: product.original_price,
+      originalPrice: product.original_price ?? undefined,
 
       currency: "NGN",
 
