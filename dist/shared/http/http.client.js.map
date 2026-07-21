@@ -1,0 +1,1 @@
+{"version":3,"file":"http.client.js","sourceRoot":"","sources":["../../../src/shared/http/http.client.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAE1B;;;GAGG;AACH,MAAM,CAAC,MAAM,UAAU,GAAG,KAAK,CAAC,MAAM,CAAC;IACrC,OAAO,EAAE,KAAK;IAEd,OAAO,EAAE;QACP,YAAY,EACV,yFAAyF;QAE3F,MAAM,EAAE,iEAAiE;QAEzE,iBAAiB,EAAE,gBAAgB;KACpC;CACF,CAAC,CAAC"}

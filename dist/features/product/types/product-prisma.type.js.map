@@ -1,0 +1,1 @@
+{"version":3,"file":"product-prisma.type.js","sourceRoot":"","sources":["../../../../src/features/product/types/product-prisma.type.ts"],"names":[],"mappings":"AAAA;;;;;;;;;GASG;AAIH,MAAM,CAAC,MAAM,eAAe,GAAG;IAC7B,KAAK,EAAE,IAAI;IACX,QAAQ,EAAE,IAAI;IACd,MAAM,EAAE;QACN,OAAO,EAAE;YACP,SAAS,EAAE,KAAK;SACjB;KACF;IACD,MAAM,EAAE,IAAI;CACmB,CAAC"}

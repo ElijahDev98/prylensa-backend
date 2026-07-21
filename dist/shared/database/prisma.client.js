@@ -1,0 +1,22 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: prisma.client.ts
+ * Project: Priciq Backend
+ * Layer: Shared Database
+ *
+ * Purpose:
+ * Provides a singleton Prisma Client instance for the application.
+ * -----------------------------------------------------------------------------
+ */
+import { PrismaClient } from "@prisma/client";
+const globalForPrisma = globalThis;
+export const prisma = globalForPrisma.prisma ??
+    new PrismaClient({
+        log: process.env.NODE_ENV === "development"
+            ? ["query", "info", "warn", "error"]
+            : ["error"],
+    });
+if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = prisma;
+}
+//# sourceMappingURL=prisma.client.js.map

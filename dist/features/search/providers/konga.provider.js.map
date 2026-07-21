@@ -1,0 +1,1 @@
+{"version":3,"file":"konga.provider.js","sourceRoot":"","sources":["../../../../src/features/search/providers/konga.provider.ts"],"names":[],"mappings":"AAGA;;GAEG;AACH,MAAM,OAAO,aAAa;IACR,YAAY,GAAG,OAAO,CAAC;IAEhC,KAAK,CAAC,MAAM,CAAC,KAAa;QAC/B,KAAK,KAAK,CAAC;QAEX,OAAO,EAAE,CAAC;IACZ,CAAC;CACF"}
