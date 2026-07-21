@@ -27,14 +27,27 @@ export const JUMIA_CONFIG = {
     TIMEOUT: 15000,
 
     HEADERS: {
-      Accept: "text/html, */*; q=0.01",
+      Accept: "text/html,*/*;q=0.01",
 
       "Accept-Language": "en-US,en;q=0.9",
 
       "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
 
-      Referer: "https://www.jumia.com.ng/",
+      Referer:
+        "https://www.jumia.com.ng/assets_he/js/fetch-lp.worker.676e43b1.js",
+
+      "X-Request-Type": "async",
+
+      "X-Requested-With": "XMLHttpRequest",
+
+      Connection: "keep-alive",
+
+      "Cache-Control": "no-cache",
+
+      Pragma: "no-cache",
+
+      "Accept-Encoding": "gzip, deflate, br",
     },
   },
 

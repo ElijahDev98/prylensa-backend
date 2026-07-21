@@ -39,7 +39,7 @@ export class JumiaProvider implements MarketplaceProvider {
     this.client = axios.create({
       baseURL: JUMIA_CONFIG.BASE_URL,
       timeout: JUMIA_CONFIG.HTTP.TIMEOUT,
-      withCredentials: false,
+      // withCredentials: false,
       headers: JUMIA_CONFIG.HTTP.HEADERS,
     });
 
@@ -69,8 +69,15 @@ export class JumiaProvider implements MarketplaceProvider {
         },
       );
 
-      console.log("[Jumia] Response:");
+      console.log("Status:", response.status);
+      console.log("Status Text:", response.statusText);
+      console.log("Headers:", response.headers);
+      console.log("Data Length:", response.data.length);
+      console.log("Data:", JSON.stringify(response.data));
+
+      console.log("========== RESPONSE START ==========");
       console.log(response.data);
+      console.log("========== RESPONSE END ==========");
 
       const searchResult = this.parser.parse(response.data);
 
