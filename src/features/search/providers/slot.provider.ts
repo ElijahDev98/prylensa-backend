@@ -1,13 +1,13 @@
-import type { SearchResult } from "../models/search-result.model.js";
-import type { SearchProvider } from "./search-provider.interface.js";
+import type { Offer } from "../models/offer.model.js";
+import type { OfferProvider } from "./offer-provider.interface.js";
 
 /**
  * Retrieves products from Slot.
  */
-export class SlotProvider implements SearchProvider {
-  public readonly providerName = "Slot";
+export class SlotProvider implements OfferProvider {
+  public readonly store = "Slot";
 
-  public async search(query: string): Promise<SearchResult[]> {
+  public async search(query: string): Promise<Offer[]> {
     void query;
 
     return [];

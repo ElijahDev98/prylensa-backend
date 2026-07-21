@@ -1,4 +1,4 @@
-import type { SearchProvider } from "./search-provider.interface.js";
+import type { OfferProvider } from "./offer-provider.interface.js";
 
 import { JumiaProvider } from "./jumia.provider.js";
 import { KongaProvider } from "./konga.provider.js";
@@ -8,7 +8,7 @@ import { SlotProvider } from "./slot.provider.js";
  * Registers all supported search providers.
  */
 export class ProviderManager {
-  private readonly providers: SearchProvider[];
+  private readonly providers: OfferProvider[];
 
   constructor() {
     this.providers = [
@@ -18,7 +18,7 @@ export class ProviderManager {
     ];
   }
 
-  public getProviders(): SearchProvider[] {
+  public getProviders(): OfferProvider[] {
     return this.providers;
   }
 }

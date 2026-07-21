@@ -1,13 +1,13 @@
-import type { SearchResultModel } from "../models/search-result.model.js";
-import type { SearchProvider } from "./search-provider.interface.js";
+import type { Offer } from "../models/offer.model.js";
+import type { OfferProvider } from "./offer-provider.interface.js";
 
 /**
  * Retrieves products from Konga.
  */
-export class KongaProvider implements SearchProvider {
-  public readonly providerName = "Konga";
+export class KongaProvider implements OfferProvider {
+  public readonly store = "Konga";
 
-  public async search(query: string): Promise<SearchResultModel[]> {
+  public async search(query: string): Promise<Offer[]> {
     void query;
 
     return [];
