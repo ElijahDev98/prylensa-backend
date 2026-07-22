@@ -1,54 +1,62 @@
-/**
- * -----------------------------------------------------------------------------
- * File: OfferMatchingEngine.ts
- * Module: Marketplace
- *
- * Description:
- * Coordinates the marketplace offer matching pipeline.
- *
- * Current implementation performs deterministic normalization only.
- * AI semantic matching will be introduced in a later phase without
- * changing this class's public API.
- *
- * Responsibilities:
- * - Normalize marketplace offers.
- * - Produce deterministic comparison keys.
- * - Prepare offers for future matching stages.
- *
- * Responsibilities NOT included:
- * - AI semantic matching
- * - Price comparison
- * - Recommendation
- * -----------------------------------------------------------------------------
- */
-
 import type { Offer } from "../../models/Offer.js";
 
-import { ProductNormalizationService } from "./ProductNormalizationService.js";
+import {
+  DeterministicMatcher,
+  type OfferGroup,
+} from "./DeterministicMatcher.js";
 
+/**
+ * -----------------------------------------------------------------------------
+ * Offer Matching Engine
+ * -----------------------------------------------------------------------------
+ *
+ * The OfferMatchingEngine coordinates the marketplace matching pipeline.
+ *
+ * It is responsible for orchestrating the different matching strategies
+ * without implementing the matching algorithms itself.
+ *
+ * Current Pipeline
+ * ----------------
+ * 1. Deterministic Matching
+ *
+ * Future Pipeline
+ * ---------------
+ * 1. Deterministic Matching
+ * 2. AI Semantic Matching
+ * 3. Confidence Scoring
+ * 4. Canonical Product Selection
+ *
+ * This class intentionally delegates work to dedicated services so that
+ * each matching strategy can evolve independently.
+ */
 export class OfferMatchingEngine {
   constructor(
-    private readonly normalizationService = new ProductNormalizationService(),
+    private readonly deterministicMatcher = new DeterministicMatcher(),
   ) {}
 
   /**
-   * Prepares marketplace offers for matching.
+   * Executes the marketplace matching pipeline.
    *
-   * This is the initial stage of the matching pipeline.
-   * Grouping and AI semantic matching will be added later.
+   * @param offers Marketplace offers collected from all providers.
+   *
+   * @returns Groups of offers that represent the same product.
    */
-  public prepare(offers: readonly Offer[]): readonly Offer[] {
-    return offers.map((offer) => {
-      const normalized = this.normalizationService.normalize(
-        offer.title,
-        offer.brand,
-      );
+  public match(offers: readonly Offer[]): OfferGroup[] {
+    /**
+     * Stage 1:
+     * Group offers using deterministic normalization.
+     */
+    const deterministicGroups = this.deterministicMatcher.match(offers);
 
-      return {
-        ...offer,
-        title: normalized.title,
-        brand: normalized.brand,
-      };
-    });
+    /**
+     * Future:
+     *
+     * const semanticGroups =
+     *   await this.aiSemanticMatcher.match(deterministicGroups);
+     *
+     * return semanticGroups;
+     */
+
+    return deterministicGroups;
   }
 }
