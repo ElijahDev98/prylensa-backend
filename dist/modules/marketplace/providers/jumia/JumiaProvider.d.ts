@@ -8,7 +8,8 @@
  *
  * Responsibilities:
  * - Execute product searches against Jumia.
- * - Parse Jumia's HTML fragment.
+ * - Download the fully rendered HTML using Playwright.
+ * - Parse the marketplace application state.
  * - Convert provider DTOs into Offer domain models.
  * - Never expose provider DTOs outside this layer.
  * -----------------------------------------------------------------------------
@@ -18,7 +19,7 @@ import { Offer } from "../../models/Offer.js";
 import { Product } from "../../models/Product.js";
 export declare class JumiaProvider implements MarketplaceProvider {
     readonly name = "Jumia";
-    private readonly client;
+    private readonly scraper;
     private readonly parser;
     private readonly mapper;
     constructor();

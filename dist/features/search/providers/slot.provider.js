@@ -2,7 +2,7 @@
  * Retrieves products from Slot.
  */
 export class SlotProvider {
-    providerName = "Slot";
+    store = "Slot";
     async search(query) {
         void query;
         return [];

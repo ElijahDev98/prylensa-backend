@@ -2,7 +2,7 @@
  * Retrieves products from Konga.
  */
 export class KongaProvider {
-    providerName = "Konga";
+    store = "Konga";
     async search(query) {
         void query;
         return [];

@@ -8,69 +8,51 @@
  *
  * Responsibilities:
  * - Execute product searches against Jumia.
- * - Parse Jumia's HTML fragment.
+ * - Download the fully rendered HTML using Playwright.
+ * - Parse the marketplace application state.
  * - Convert provider DTOs into Offer domain models.
  * - Never expose provider DTOs outside this layer.
  * -----------------------------------------------------------------------------
  */
-import axios, { AxiosError } from "axios";
-import { JUMIA_CONFIG } from "./config/jumia.config.js";
-import { JumiaSearchParser } from "./parser/jumia-search.parser.js";
+import { JumiaScraper } from "./scraper/JumiaScraper.js";
+import { JumiaDomParser } from "./parser/JumiaDomParser.js";
 import { JumiaOfferMapper } from "./mapper/jumia-offer.mapper.js";
 export class JumiaProvider {
     name = "Jumia";
-    client;
+    scraper;
     parser;
     mapper;
     constructor() {
-        this.client = axios.create({
-            baseURL: JUMIA_CONFIG.BASE_URL,
-            timeout: JUMIA_CONFIG.HTTP.TIMEOUT,
-            // withCredentials: false,
-            headers: JUMIA_CONFIG.HTTP.HEADERS,
-        });
-        this.parser = new JumiaSearchParser();
+        this.scraper = new JumiaScraper();
+        this.parser = new JumiaDomParser();
         this.mapper = new JumiaOfferMapper();
     }
     /**
      * Searches products on Jumia.
      */
     async search(query) {
+        // console.log(`[Jumia] Searching: ${query}`);
         try {
-            console.log("[Jumia] Searching:", query);
-            const response = await this.client.get(JUMIA_CONFIG.SEARCH.ENDPOINT, {
-                params: {
-                    query,
-                    page: JUMIA_CONFIG.SEARCH.DEFAULT_PAGE,
-                    numberItems: JUMIA_CONFIG.SEARCH.DEFAULT_PAGE_SIZE,
-                    viewType: JUMIA_CONFIG.SEARCH.DEFAULT_VIEW,
-                    returnOverride: `/catalog/?q=${encodeURIComponent(query)}`,
-                    lang: JUMIA_CONFIG.SEARCH.DEFAULT_LANGUAGE,
-                },
-                responseType: "text",
-            });
-            console.log("Status:", response.status);
-            console.log("Status Text:", response.statusText);
-            console.log("Headers:", response.headers);
-            console.log("Data Length:", response.data.length);
-            console.log("Data:", JSON.stringify(response.data));
-            console.log("========== RESPONSE START ==========");
-            console.log(response.data);
-            console.log("========== RESPONSE END ==========");
-            const searchResult = this.parser.parse(response.data);
-            console.log("[Jumia] Parsed Products:", searchResult.products.length);
-            const offers = this.mapper.mapMany(searchResult.products);
-            console.log("[Jumia] Mapped Offers:", offers.length);
+            const html = await this.scraper.scrape(query);
+            // console.log(
+            //   `[Jumia] Downloaded HTML (${html.length.toLocaleString()} bytes)`,
+            // );
+            const store = this.parser.parse(html);
+            // console.log(
+            //   `[Jumia] Parsed Products: ${store.products.length.toLocaleString()}`,
+            // );
+            const offers = this.mapper.mapMany(store.products);
+            /*
+            // console.log(`[Jumia] Mapped Offers: ${offers.length.toLocaleString()}`);
+      
             if (offers.length > 0) {
-                console.log("[Jumia] First Offer:", offers[0]);
+              // console.log("[Jumia] First Offer:", offers[0]);
             }
+            */
             return offers;
         }
         catch (error) {
-            if (error instanceof AxiosError) {
-                throw new Error(`Jumia search failed (${error.response?.status ?? "Unknown"}): ${error.message}`);
-            }
-            throw new Error(`Unexpected error while searching Jumia: ${error instanceof Error ? error.message : String(error)}`);
+            throw new Error(`Jumia search failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
     /**
