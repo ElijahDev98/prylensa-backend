@@ -10,22 +10,26 @@
  * - Receive HTTP requests.
  * - Validate request parameters.
  * - Delegate business logic to MarketplaceService.
+ * - Map business models to API response DTOs.
  * - Return standardized HTTP responses.
  *
- * This controller intentionally contains no marketplace business logic.
- * All business operations are delegated to MarketplaceService.
+ * The controller contains no marketplace business logic.
  * -----------------------------------------------------------------------------
  */
 
 import type { NextFunction, Request, Response } from "express";
 
+import { SearchResponseMapper } from "../mappers/SearchResponseMapper.js";
 import { MarketplaceService } from "../services/MarketplaceService.js";
 
 export class MarketplaceController {
   /**
    * Creates a MarketplaceController.
    */
-  constructor(private readonly service: MarketplaceService) {}
+  constructor(
+    private readonly service: MarketplaceService,
+    private readonly responseMapper = new SearchResponseMapper(),
+  ) {}
 
   /**
    * Searches all configured marketplaces.
@@ -34,18 +38,13 @@ export class MarketplaceController {
    * GET /marketplace/search?q=<keyword>
    *
    * Workflow:
-   * 1. Read the search query.
+   * --------------------------------------------------------------------------
+   * 1. Read the query parameter.
    * 2. Validate the request.
    * 3. Delegate the search to MarketplaceService.
-   * 4. Return grouped marketplace offers.
-   *
-   * Example Response:
-   *
-   * {
-   *   success: true,
-   *   count: 3,
-   *   data: [...]
-   * }
+   * 4. Convert internal business models into response DTOs.
+   * 5. Return a standardized JSON response.
+   * --------------------------------------------------------------------------
    */
   public async search(
     req: Request,
@@ -54,12 +53,12 @@ export class MarketplaceController {
   ): Promise<void> {
     try {
       /**
-       * Read the query parameter.
+       * Read the search query.
        */
       const query = String(req.query.q ?? "").trim();
 
       /**
-       * Validate the incoming request.
+       * Validate the request.
        */
       if (!query) {
         res.status(400).json({
@@ -71,22 +70,22 @@ export class MarketplaceController {
       }
 
       /**
-       * Execute the marketplace search pipeline.
-       *
-       * The service performs:
-       * - Offer collection
-       * - Deterministic matching
-       * - AI semantic matching (placeholder)
+       * Execute the marketplace search workflow.
        */
-      const offerGroups = await this.service.search(query);
+      const matchedGroups = await this.service.search(query);
 
       /**
-       * Return the grouped marketplace offers.
+       * Convert internal models into public API DTOs.
+       */
+      const response = this.responseMapper.toDtoList(matchedGroups);
+
+      /**
+       * Return the API response.
        */
       res.status(200).json({
         success: true,
-        count: offerGroups.length,
-        data: offerGroups,
+        count: response.length,
+        data: response,
       });
     } catch (error) {
       /**
