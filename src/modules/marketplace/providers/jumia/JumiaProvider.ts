@@ -43,28 +43,30 @@ export class JumiaProvider implements MarketplaceProvider {
    * Searches products on Jumia.
    */
   public async search(query: string): Promise<Offer[]> {
-    console.log(`[Jumia] Searching: ${query}`);
+    console.log(`[Jumia] Searching: ${query}... Slot & Konga store is fetched`);
 
     try {
       const html = await this.scraper.scrape(query);
 
-      console.log(
-        `[Jumia] Downloaded HTML (${html.length.toLocaleString()} bytes)`,
-      );
+      // console.log(
+      //   `[Jumia] Downloaded HTML (${html.length.toLocaleString()} bytes)`,
+      // );
 
       const store = this.parser.parse(html);
 
-      console.log(
-        `[Jumia] Parsed Products: ${store.products.length.toLocaleString()}`,
-      );
+      // console.log(
+      //   `[Jumia] Parsed Products: ${store.products.length.toLocaleString()}`,
+      // );
 
       const offers = this.mapper.mapMany(store.products);
 
-      console.log(`[Jumia] Mapped Offers: ${offers.length.toLocaleString()}`);
+      /*
+      // console.log(`[Jumia] Mapped Offers: ${offers.length.toLocaleString()}`);
 
       if (offers.length > 0) {
-        console.log("[Jumia] First Offer:", offers[0]);
+        // console.log("[Jumia] First Offer:", offers[0]);
       }
+      */
 
       return offers;
     } catch (error) {

@@ -29,7 +29,7 @@ export class JumiaScraper {
     try {
       const url = this.buildSearchUrl(query);
 
-      console.log(`[Jumia] Navigating to ${url}`);
+      //   console.log(`[Jumia] Navigating to ${url}`);
 
       await page.goto(url, {
         waitUntil: "domcontentloaded",
@@ -40,9 +40,9 @@ export class JumiaScraper {
 
       const html = await page.content();
 
-      console.log(
-        `[Jumia] HTML downloaded (${html.length.toLocaleString()} bytes)`,
-      );
+      //   console.log(
+      //     `[Jumia] HTML downloaded (${html.length.toLocaleString()} bytes)`,
+      //   );
 
       return html;
     } finally {

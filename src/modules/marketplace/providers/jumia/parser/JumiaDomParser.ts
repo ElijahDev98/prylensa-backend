@@ -134,11 +134,6 @@ export class JumiaDomParser {
    * will be replaced with a production-safe JavaScript parser.
    */
   private deserializeStore(storeObject: string): JumiaStore {
-    // Temporary debugging
-    console.log("========== JUMIA STORE ==========");
-    console.log(storeObject);
-    console.log("=================================");
-
     const normalized = this.normalizeStoreObject(storeObject);
 
     let parsed: unknown;
