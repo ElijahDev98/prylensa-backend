@@ -1,68 +1,54 @@
-import type { MatchedProduct } from "../models/matched-product.model.js";
-import type { Offer } from "../../search/models/offer.model.js";
-
 /**
- * Groups offers that represent the same product.
+ * -----------------------------------------------------------------------------
+ * File: OfferMatchingEngine.ts
+ * Module: Marketplace
  *
- * This initial implementation is intentionally simple.
- * It groups offers by their normalized title.
+ * Description:
+ * Coordinates the marketplace offer matching pipeline.
  *
- * In a future milestone this engine will be replaced with
- * an AI-powered semantic matching implementation without
- * affecting the rest of the application.
+ * Current implementation performs deterministic normalization only.
+ * AI semantic matching will be introduced in a later phase without
+ * changing this class's public API.
+ *
+ * Responsibilities:
+ * - Normalize marketplace offers.
+ * - Produce deterministic comparison keys.
+ * - Prepare offers for future matching stages.
+ *
+ * Responsibilities NOT included:
+ * - AI semantic matching
+ * - Price comparison
+ * - Recommendation
+ * -----------------------------------------------------------------------------
  */
-export class ProductMatchingEngine {
+
+import type { Offer } from "../../models/Offer.js";
+
+import { ProductNormalizationService } from "./ProductNormalizationService.js";
+
+export class OfferMatchingEngine {
+  constructor(
+    private readonly normalizationService = new ProductNormalizationService(),
+  ) {}
+
   /**
-   * Groups offers into matched products.
+   * Prepares marketplace offers for matching.
    *
-   * @param offers Normalized offers collected from providers.
-   *
-   * @returns Matched products.
+   * This is the initial stage of the matching pipeline.
+   * Grouping and AI semantic matching will be added later.
    */
-  public match(offers: Offer[]): MatchedProduct[] {
-    const groups = new Map<string, Offer[]>();
-
-    for (const offer of offers) {
-      const key = this.normalizeTitle(offer.title);
-
-      const existing = groups.get(key);
-
-      if (existing) {
-        existing.push(offer);
-      } else {
-        groups.set(key, [offer]);
-      }
-    }
-
-    return Array.from(groups.entries()).map(([id, groupedOffers]) => {
-      const firstOffer = groupedOffers.at(0);
-
-      if (!firstOffer) {
-        throw new Error("Matched product must contain at least one offer.");
-      }
+  public prepare(offers: readonly Offer[]): readonly Offer[] {
+    return offers.map((offer) => {
+      const normalized = this.normalizationService.normalize(
+        offer.title,
+        offer.brand,
+      );
 
       return {
-        id,
-        title: firstOffer.title,
-        image: firstOffer.image,
-        confidence: 1.0,
-        offers: groupedOffers,
+        ...offer,
+        title: normalized.title,
+        brand: normalized.brand,
       };
     });
-  }
-
-  /**
-   * Produces a normalized title used for temporary grouping.
-   *
-   * NOTE:
-   * This is a placeholder implementation and will be replaced
-   * by AI semantic matching in a later milestone.
-   */
-  private normalizeTitle(title: string): string {
-    return title
-      .toLowerCase()
-      .replace(/[^\w\s]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
   }
 }
