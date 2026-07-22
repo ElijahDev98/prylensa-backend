@@ -18,7 +18,7 @@ import type { KongaSearchItemDto } from "../dto/KongaSearchResponseDto.js";
 
 const KONGA_BASE_URL = "https://www.konga.com/product/";
 const KONGA_IMAGE_BASE_URL =
-  "https://www-konga-com-res.cloudinary.com/image/upload";
+  "https://www-konga-com-res.cloudinary.com/image/upload/f_auto,q_auto,w_400,c_limit/media/catalog/product";
 
 export class KongaOfferMapper {
   /**
