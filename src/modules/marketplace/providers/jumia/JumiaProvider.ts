@@ -43,7 +43,7 @@ export class JumiaProvider implements MarketplaceProvider {
    * Searches products on Jumia.
    */
   public async search(query: string): Promise<Offer[]> {
-    console.log(`[Jumia] Searching: ${query}... Slot & Konga store is fetched`);
+    // console.log(`[Jumia] Searching: ${query}`);
 
     try {
       const html = await this.scraper.scrape(query);
