@@ -1,6 +1,9 @@
 import { Offer } from "../../../models/Offer.js";
 import { SlotProductDto } from "../dto/SlotSearchResponseDto.js";
 
+const imageUrl = `https://api-prod.slot.ng/storage/`;
+const productUrl = `https://api-prod.slot.ng/storage/`;
+
 /**
  * Maps Slot API products into the application's
  * shared Offer domain model.
@@ -47,9 +50,9 @@ export class SlotOfferMapper {
 
       currency: "NGN",
 
-      imageUrl: product.image_link,
+      imageUrl: `${imageUrl}${product.image_link}`,
 
-      productUrl: `https://slot.ng/products/${product.slug}`,
+      productUrl: `${productUrl}${product.slug}`,
 
       marketplace: "Slot",
 
