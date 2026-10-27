@@ -1,0 +1,10 @@
+node_modules
+
+.env
+
+dev-server.err.log
+dev-server.out.log
+discount-fix-backend.err.log
+discount-fix-backend.out.log
+
+dist
