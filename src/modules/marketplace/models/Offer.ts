@@ -37,6 +37,9 @@ export interface Offer {
   /** Original price before discount, if available. */
   originalPrice?: number;
 
+  /** Marketplace-reported or price-derived discount percentage. */
+  discountPercentage?: number;
+
   /** Currency code (e.g. NGN, USD). */
   currency: string;
 
@@ -54,4 +57,13 @@ export interface Offer {
 
   /** Average customer rating, if available. */
   rating?: number;
+
+  /** Whether the value came from the current provider call or a stored snapshot. */
+  dataSource?: "live" | "persisted-snapshot";
+
+  /** Observation timestamp when a persisted snapshot is used. */
+  observedAt?: string;
+
+  /** Whether current marketplace availability can be trusted. */
+  availabilityStatus?: "in-stock" | "out-of-stock" | "unverified";
 }

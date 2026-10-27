@@ -14,6 +14,7 @@
  * - Never expose provider DTOs outside this layer.
  * -----------------------------------------------------------------------------
  */
+import { MARKETPLACE_OFFER_TARGET } from "../../constants/marketplace-search.constants.js";
 import { JumiaScraper } from "./scraper/JumiaScraper.js";
 import { JumiaDomParser } from "./parser/JumiaDomParser.js";
 import { JumiaOfferMapper } from "./mapper/jumia-offer.mapper.js";
@@ -49,7 +50,7 @@ export class JumiaProvider {
               // console.log("[Jumia] First Offer:", offers[0]);
             }
             */
-            return offers;
+            return offers.slice(0, MARKETPLACE_OFFER_TARGET);
         }
         catch (error) {
             throw new Error(`Jumia search failed: ${error instanceof Error ? error.message : String(error)}`);

@@ -22,7 +22,6 @@ export declare const JUMIA_CONFIG: {
      * HTTP configuration.
      */
     readonly HTTP: {
-        readonly TIMEOUT: 15000;
         readonly HEADERS: {
             readonly Accept: "text/html,*/*;q=0.01";
             readonly "Accept-Language": "en-US,en;q=0.9";
@@ -42,7 +41,7 @@ export declare const JUMIA_CONFIG: {
     readonly SEARCH: {
         readonly ENDPOINT: "/fragment/sp/products/provider/mirakl/catalog-page-types/search/";
         readonly DEFAULT_PAGE: 1;
-        readonly DEFAULT_PAGE_SIZE: 12;
+        readonly DEFAULT_PAGE_SIZE: 15;
         readonly DEFAULT_VIEW: "grid";
         readonly DEFAULT_LANGUAGE: "en";
     };

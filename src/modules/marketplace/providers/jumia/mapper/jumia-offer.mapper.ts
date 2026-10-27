@@ -22,6 +22,33 @@ export class JumiaOfferMapper {
    * Maps a Jumia product into the Offer domain model.
    */
   public map(product: JumiaProductDto): Offer {
+    const price = Number(product.prices.rawPrice);
+    const reportedOriginalPrice = product.prices.oldPrice
+      ? Number(product.prices.oldPrice.replace(/[^\d.]/g, ""))
+      : undefined;
+    const reportedDiscount = product.prices.discount
+      ? Number(product.prices.discount.replace(/[^\d.]/g, ""))
+      : undefined;
+    const discountPercentage =
+      Number.isFinite(reportedDiscount) &&
+      reportedDiscount !== undefined &&
+      reportedDiscount > 0 &&
+      reportedDiscount < 100
+        ? reportedDiscount
+        : Number.isFinite(reportedOriginalPrice) &&
+            reportedOriginalPrice !== undefined &&
+            reportedOriginalPrice > price
+          ? ((reportedOriginalPrice - price) / reportedOriginalPrice) * 100
+          : undefined;
+    const originalPrice =
+      Number.isFinite(reportedOriginalPrice) &&
+      reportedOriginalPrice !== undefined &&
+      reportedOriginalPrice > price
+        ? reportedOriginalPrice
+        : discountPercentage
+          ? price / (1 - discountPercentage / 100)
+          : undefined;
+
     return {
       id: product.sku,
 
@@ -31,11 +58,11 @@ export class JumiaOfferMapper {
 
       brand: product.brand || undefined,
 
-      price: Number(product.prices.rawPrice),
+      price,
 
-      originalPrice: product.prices.oldPrice
-        ? Number(product.prices.oldPrice.replace(/[^\d.]/g, ""))
-        : undefined,
+      originalPrice,
+
+      discountPercentage,
 
       currency: "NGN",
 

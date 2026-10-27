@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: product.model.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Feature: Product
  *
  * Purpose:

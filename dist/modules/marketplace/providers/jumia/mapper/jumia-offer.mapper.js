@@ -18,15 +18,38 @@ export class JumiaOfferMapper {
      * Maps a Jumia product into the Offer domain model.
      */
     map(product) {
+        const price = Number(product.prices.rawPrice);
+        const reportedOriginalPrice = product.prices.oldPrice
+            ? Number(product.prices.oldPrice.replace(/[^\d.]/g, ""))
+            : undefined;
+        const reportedDiscount = product.prices.discount
+            ? Number(product.prices.discount.replace(/[^\d.]/g, ""))
+            : undefined;
+        const discountPercentage = Number.isFinite(reportedDiscount) &&
+            reportedDiscount !== undefined &&
+            reportedDiscount > 0 &&
+            reportedDiscount < 100
+            ? reportedDiscount
+            : Number.isFinite(reportedOriginalPrice) &&
+                reportedOriginalPrice !== undefined &&
+                reportedOriginalPrice > price
+                ? ((reportedOriginalPrice - price) / reportedOriginalPrice) * 100
+                : undefined;
+        const originalPrice = Number.isFinite(reportedOriginalPrice) &&
+            reportedOriginalPrice !== undefined &&
+            reportedOriginalPrice > price
+            ? reportedOriginalPrice
+            : discountPercentage
+                ? price / (1 - discountPercentage / 100)
+                : undefined;
         return {
             id: product.sku,
             productId: product.sku,
             title: product.name,
             brand: product.brand || undefined,
-            price: Number(product.prices.rawPrice),
-            originalPrice: product.prices.oldPrice
-                ? Number(product.prices.oldPrice.replace(/[^\d.]/g, ""))
-                : undefined,
+            price,
+            originalPrice,
+            discountPercentage,
             currency: "NGN",
             imageUrl: product.image,
             productUrl: this.buildProductUrl(product.url),

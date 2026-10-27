@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: logger.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Shared
  *
  * Purpose:

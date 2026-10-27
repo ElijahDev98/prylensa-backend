@@ -1,17 +1,12 @@
-import { writeFile } from "node:fs/promises";
-import path from "node:path";
+import assert from "node:assert/strict";
+import test from "node:test";
 import { JumiaScraper } from "../modules/marketplace/providers/jumia/scraper/JumiaScraper.js";
-async function main() {
+test("Jumia live scraper returns marketplace HTML", {
+    skip: process.env.RUN_LIVE_MARKETPLACE_TESTS !== "true",
+}, async () => {
     const scraper = new JumiaScraper();
     const html = await scraper.scrape("iphone");
-    const filePath = path.resolve(process.cwd(), "jumia.html");
-    await writeFile(filePath, html, "utf8");
-    console.log(html);
-    console.log(`Saved ${html.length.toLocaleString()} bytes.`);
-    console.log(`Location: ${filePath}`);
-}
-main().catch((error) => {
-    console.error(error);
-    process.exit(1);
+    assert.ok(html.length > 1000);
+    assert.match(html.toLowerCase(), /iphone/);
 });
 //# sourceMappingURL=jumia-scraper.test.js.map

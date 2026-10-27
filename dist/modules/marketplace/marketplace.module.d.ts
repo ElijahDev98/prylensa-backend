@@ -19,6 +19,13 @@
  * -----------------------------------------------------------------------------
  */
 import { MarketplaceController } from "./controllers/MarketplaceController.js";
+import { MarketplaceService } from "./services/MarketplaceService.js";
+import { SearchDatasetService } from "./services/SearchDatasetService.js";
+/**
+ * Service.
+ */
+export declare const marketplaceService: MarketplaceService;
+export declare const searchDatasetService: SearchDatasetService;
 /**
  * Marketplace controller.
  */

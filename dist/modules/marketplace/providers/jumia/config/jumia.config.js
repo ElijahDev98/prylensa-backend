@@ -13,6 +13,7 @@
  * - Avoid hard-coded values throughout the provider.
  * -----------------------------------------------------------------------------
  */
+import { MARKETPLACE_OFFER_TARGET } from "../../../constants/marketplace-search.constants.js";
 export const JUMIA_CONFIG = {
     /**
      * Base Jumia URL.
@@ -22,7 +23,6 @@ export const JUMIA_CONFIG = {
      * HTTP configuration.
      */
     HTTP: {
-        TIMEOUT: 15000,
         HEADERS: {
             Accept: "text/html,*/*;q=0.01",
             "Accept-Language": "en-US,en;q=0.9",
@@ -42,7 +42,7 @@ export const JUMIA_CONFIG = {
     SEARCH: {
         ENDPOINT: "/fragment/sp/products/provider/mirakl/catalog-page-types/search/",
         DEFAULT_PAGE: 1,
-        DEFAULT_PAGE_SIZE: 12,
+        DEFAULT_PAGE_SIZE: MARKETPLACE_OFFER_TARGET,
         DEFAULT_VIEW: "grid",
         DEFAULT_LANGUAGE: "en",
     },

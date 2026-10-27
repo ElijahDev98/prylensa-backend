@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: app.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Application
  *
  * Purpose:
@@ -17,6 +17,7 @@ import routes from "./routes/index.js";
 import { env } from "./config/environment.js";
 import { NotFoundError } from "../shared/errors/not-found-error.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
+import { rateLimit } from "./middlewares/rate-limit.middleware.js";
 const app = express();
 /**
  * ---------------------------------------------------------------------------
@@ -25,7 +26,10 @@ const app = express();
  */
 app.use(helmet());
 app.use(cors({
-    origin: true,
+    origin(origin, callback) {
+        const allowed = env.CORS_ORIGINS.split(",").map((value) => value.trim());
+        callback(null, !origin || allowed.includes(origin));
+    },
     credentials: true,
 }));
 app.use(express.json());
@@ -33,6 +37,7 @@ app.use(express.urlencoded({
     extended: true,
 }));
 app.use(morgan(env.NODE_ENV === "development" ? "dev" : "combined"));
+app.use(rateLimit);
 /**
  * ---------------------------------------------------------------------------
  * API Routes

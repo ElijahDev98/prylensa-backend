@@ -1,0 +1,17 @@
+Failed to start Priciq Backend. Error: listen EADDRINUSE: address already in use :::5000
+    at Server.setupListenHandle [as _listen2] (node:net:1941:16)
+    at listenInCluster (node:net:1998:12)
+    at Server.listen (node:net:2103:7)
+    at <anonymous> (C:\Users\user\Documents\Codex\2026-07-24\i\Project Compilation\Priciq-Backend\src\app\server.ts:42:12)
+    at new Promise (<anonymous>)
+    at startServer (C:\Users\user\Documents\Codex\2026-07-24\i\Project Compilation\Priciq-Backend\src\app\server.ts:40:9)
+    at bootstrap (C:\Users\user\Documents\Codex\2026-07-24\i\Project Compilation\Priciq-Backend\src\index.ts:35:11)
+    at <anonymous> (C:\Users\user\Documents\Codex\2026-07-24\i\Project Compilation\Priciq-Backend\src\index.ts:44:6)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 5000
+}

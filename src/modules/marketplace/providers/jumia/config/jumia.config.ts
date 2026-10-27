@@ -14,6 +14,8 @@
  * -----------------------------------------------------------------------------
  */
 
+import { MARKETPLACE_OFFER_TARGET } from "../../../constants/marketplace-search.constants.js";
+
 export const JUMIA_CONFIG = {
   /**
    * Base Jumia URL.
@@ -24,8 +26,6 @@ export const JUMIA_CONFIG = {
    * HTTP configuration.
    */
   HTTP: {
-    TIMEOUT: 15000,
-
     HEADERS: {
       Accept: "text/html,*/*;q=0.01",
 
@@ -60,7 +60,7 @@ export const JUMIA_CONFIG = {
 
     DEFAULT_PAGE: 1,
 
-    DEFAULT_PAGE_SIZE: 12,
+    DEFAULT_PAGE_SIZE: MARKETPLACE_OFFER_TARGET,
 
     DEFAULT_VIEW: "grid",
 

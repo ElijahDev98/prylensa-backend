@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: product.mapper.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Feature: Product
  *
  * Purpose:

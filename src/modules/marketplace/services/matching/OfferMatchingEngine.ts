@@ -4,7 +4,6 @@ import {
   DeterministicMatcher,
   type OfferGroup,
 } from "./DeterministicMatcher.js";
-import { AiSemanticMatcher } from "./AiSemanticMatcher.js";
 
 /**
  * -----------------------------------------------------------------------------
@@ -18,15 +17,9 @@ import { AiSemanticMatcher } from "./AiSemanticMatcher.js";
  *
  * Current Pipeline
  * ----------------
- * 1. Deterministic Matching
- * 2. AI Semantic Matching (Placeholder)
- *
- * Future Pipeline
- * ---------------
- * 1. Deterministic Matching
- * 2. AI Semantic Matching
- * 3. Confidence Scoring
- * 4. Canonical Product Resolution
+ * This stage creates stable candidate groups. Query relevance, ranking,
+ * confidence scoring, price analysis and recommendations are performed by the
+ * AI service before the backend exposes search results.
  *
  * This orchestration approach keeps each matching strategy isolated,
  * maintainable, and independently testable.
@@ -35,7 +28,6 @@ import { AiSemanticMatcher } from "./AiSemanticMatcher.js";
 export class OfferMatchingEngine {
   constructor(
     private readonly deterministicMatcher = new DeterministicMatcher(),
-    private readonly aiSemanticMatcher = new AiSemanticMatcher(),
   ) {}
 
   /**
@@ -44,8 +36,7 @@ export class OfferMatchingEngine {
    * Workflow:
    *
    * 1. Deterministically group marketplace offers.
-   * 2. Refine those groups using semantic AI matching.
-   * 3. Return the final grouped offers.
+   * 2. Return candidate groups for AI relevance and analysis.
    *
    * @param offers Marketplace offers collected from providers.
    *
@@ -58,13 +49,6 @@ export class OfferMatchingEngine {
      */
     const deterministicGroups = this.deterministicMatcher.match(offers);
 
-    /**
-     * Stage 2:
-     * AI semantic refinement.
-     *
-     * Current implementation simply returns the deterministic groups.
-     * Future implementation will communicate with the FastAPI AI service.
-     */
-    return this.aiSemanticMatcher.match(deterministicGroups);
+    return deterministicGroups;
   }
 }

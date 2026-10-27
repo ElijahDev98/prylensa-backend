@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: product-image.dto.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Feature: Product
  *
  * Purpose:

@@ -4,24 +4,20 @@ import { DeterministicMatcher, } from "./DeterministicMatcher.js";
  * Offer Matching Engine
  * -----------------------------------------------------------------------------
  *
- * The OfferMatchingEngine coordinates the marketplace matching pipeline.
+ * Coordinates the marketplace offer matching pipeline.
  *
- * It is responsible for orchestrating the different matching strategies
- * without implementing the matching algorithms itself.
+ * This class does not implement any matching algorithm itself.
+ * Instead, it delegates each stage of the pipeline to specialized services.
  *
  * Current Pipeline
  * ----------------
- * 1. Deterministic Matching
+ * This stage creates stable candidate groups. Query relevance, ranking,
+ * confidence scoring, price analysis and recommendations are performed by the
+ * AI service before the backend exposes search results.
  *
- * Future Pipeline
- * ---------------
- * 1. Deterministic Matching
- * 2. AI Semantic Matching
- * 3. Confidence Scoring
- * 4. Canonical Product Selection
- *
- * This class intentionally delegates work to dedicated services so that
- * each matching strategy can evolve independently.
+ * This orchestration approach keeps each matching strategy isolated,
+ * maintainable, and independently testable.
+ * -----------------------------------------------------------------------------
  */
 export class OfferMatchingEngine {
     deterministicMatcher;
@@ -29,26 +25,23 @@ export class OfferMatchingEngine {
         this.deterministicMatcher = deterministicMatcher;
     }
     /**
-     * Executes the marketplace matching pipeline.
+     * Executes the complete offer matching pipeline.
      *
-     * @param offers Marketplace offers collected from all providers.
+     * Workflow:
      *
-     * @returns Groups of offers that represent the same product.
+     * 1. Deterministically group marketplace offers.
+     * 2. Return candidate groups for AI relevance and analysis.
+     *
+     * @param offers Marketplace offers collected from providers.
+     *
+     * @returns Matched offer groups.
      */
-    match(offers) {
+    async match(offers) {
         /**
          * Stage 1:
-         * Group offers using deterministic normalization.
+         * Deterministic matching.
          */
         const deterministicGroups = this.deterministicMatcher.match(offers);
-        /**
-         * Future:
-         *
-         * const semanticGroups =
-         *   await this.aiSemanticMatcher.match(deterministicGroups);
-         *
-         * return semanticGroups;
-         */
         return deterministicGroups;
     }
 }

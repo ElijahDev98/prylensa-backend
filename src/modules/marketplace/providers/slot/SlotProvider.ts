@@ -35,7 +35,6 @@ export class SlotProvider implements MarketplaceProvider {
   constructor() {
     this.client = axios.create({
       baseURL: SLOT_CONFIG.BASE_URL,
-      timeout: SLOT_CONFIG.HTTP.TIMEOUT,
       withCredentials: SLOT_CONFIG.HTTP.WITH_CREDENTIALS,
     });
   }

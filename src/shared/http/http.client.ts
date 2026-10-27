@@ -5,8 +5,6 @@ import axios from "axios";
  * e-commerce providers.
  */
 export const httpClient = axios.create({
-  timeout: 15000,
-
   headers: {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36",

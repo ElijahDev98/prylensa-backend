@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: app.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Application
  *
  * Purpose:

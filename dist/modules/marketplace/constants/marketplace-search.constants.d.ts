@@ -1,0 +1,3 @@
+export declare const MARKETPLACE_OFFER_TARGET = 15;
+export declare const MARKETPLACE_FALLBACK_OFFER_TARGET = 30;
+export declare const MARKETPLACE_SNAPSHOT_AVAILABILITY_MAX_AGE_MS: number;

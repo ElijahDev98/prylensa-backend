@@ -3,7 +3,7 @@
  * File: index.ts
  * Layer: Application Entry Point
  * Purpose:
- *   Entry point for the Priciq backend application.
+ *   Entry point for the Prylensa backend application.
  *   Responsible for bootstrapping the server.
  *
  * This file should NEVER:
@@ -15,6 +15,12 @@
  * Those responsibilities belong to other layers.
  * ================================================================
  */
+
+/**
+ * IMPORTANT:
+ * Load environment variables BEFORE importing any application modules.
+ */
+import "dotenv/config";
 
 import { startServer } from "./app/server.js";
 
@@ -28,7 +34,7 @@ const bootstrap = async (): Promise<void> => {
   try {
     await startServer();
   } catch (error) {
-    console.error("Failed to start Priciq Backend.", error);
+    console.error("Failed to start Prylensa Backend.", error);
 
     process.exit(1);
   }

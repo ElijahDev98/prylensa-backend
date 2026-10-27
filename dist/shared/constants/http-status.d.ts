@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: http-status.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Shared
  *
  * Purpose:

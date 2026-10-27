@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: validate-request.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Shared
  *
  * Purpose:

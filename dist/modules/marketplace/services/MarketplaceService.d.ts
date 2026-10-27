@@ -9,22 +9,36 @@
  * Responsibilities:
  * - Validate incoming search requests.
  * - Retrieve marketplace offers from the repository.
- * - Coordinate business operations.
+ * - Execute the offer matching pipeline.
+ * - Coordinate marketplace business operations.
  * -----------------------------------------------------------------------------
  */
-import { Offer } from "../models/Offer.js";
 import { MarketplaceRepository } from "../repositories/MarketplaceRepository.js";
+import { OfferMatchingEngine } from "./matching/OfferMatchingEngine.js";
+import type { OfferGroup } from "./matching/DeterministicMatcher.js";
 export declare class MarketplaceService {
     private readonly repository;
+    private readonly matchingEngine;
+    private readonly cache;
     /**
      * Creates a marketplace service.
      */
-    constructor(repository: MarketplaceRepository);
+    constructor(repository: MarketplaceRepository, matchingEngine?: OfferMatchingEngine);
     /**
      * Searches all configured marketplaces.
      *
+     * Workflow:
+     *
+     * 1. Validate the search query.
+     * 2. Retrieve marketplace offers.
+     * 3. Execute the matching pipeline.
+     * 4. Return grouped marketplace offers.
+     *
      * @param query User search keyword.
-     * @returns Marketplace offers.
+     *
+     * @returns Matched marketplace offer groups.
      */
-    search(query: string): Promise<Offer[]>;
+    search(query: string, options?: {
+        forceRefresh?: boolean;
+    }): Promise<readonly OfferGroup[]>;
 }

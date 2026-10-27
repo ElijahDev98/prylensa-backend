@@ -19,6 +19,7 @@ import { MarketplaceProvider } from "../MarketplaceProvider.js";
 
 import { Offer } from "../../models/Offer.js";
 import { Product } from "../../models/Product.js";
+import { MARKETPLACE_OFFER_TARGET } from "../../constants/marketplace-search.constants.js";
 
 import { JumiaScraper } from "./scraper/JumiaScraper.js";
 import { JumiaDomParser } from "./parser/JumiaDomParser.js";
@@ -68,7 +69,7 @@ export class JumiaProvider implements MarketplaceProvider {
       }
       */
 
-      return offers;
+      return offers.slice(0, MARKETPLACE_OFFER_TARGET);
     } catch (error) {
       throw new Error(
         `Jumia search failed: ${

@@ -25,10 +25,17 @@ export class KongaOfferMapper {
    * Maps a single Konga search result into an Offer.
    */
   static toOffer(product: KongaSearchItemDto): Offer {
-    const discountedPrice =
-      product.special_price !== null && product.special_price !== undefined
-        ? product.special_price
-        : product.price;
+    const hasDiscount =
+      product.special_price !== null &&
+      product.special_price !== undefined &&
+      product.special_price > 0 &&
+      product.special_price < product.price;
+    const discountedPrice = hasDiscount
+      ? product.special_price!
+      : product.price;
+    const discountPercentage = hasDiscount
+      ? ((product.price - discountedPrice) / product.price) * 100
+      : undefined;
 
     return {
       id: product.objectid,
@@ -41,7 +48,9 @@ export class KongaOfferMapper {
 
       price: discountedPrice,
 
-      originalPrice: product.special_price != null ? product.price : undefined,
+      originalPrice: hasDiscount ? product.price : undefined,
+
+      discountPercentage,
 
       currency: "NGN",
 

@@ -1,0 +1,5 @@
+
+> priciq-backend@1.0.0 dev
+> tsx watch src/index.ts
+
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }

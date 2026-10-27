@@ -2,10 +2,10 @@
  * ================================================================
  * File: index.ts
  * Layer: Application Routes
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  *
  * Purpose:
- *   Registers all top-level API routes for the Priciq backend.
+ *   Registers all top-level API routes for the Prylensa backend.
  *
  * Responsibilities:
  *   - Create the root API router.
@@ -21,7 +21,6 @@ declare const router: import("express-serve-static-core").Router;
  * Future Feature Modules
  * ================================================================
  *
- * router.use("/dashboard", dashboardRouter);
  * router.use("/search", searchRouter);
  * router.use("/products", productRouter);
  * router.use("/offers", offerRouter);

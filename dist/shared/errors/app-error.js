@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: app-error.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Shared
  *
  * Purpose:

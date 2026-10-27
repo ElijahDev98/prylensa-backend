@@ -1,7 +1,6 @@
 import { Page } from "playwright";
 
 import { BrowserPool } from "../browser/BrowserPool.js";
-import { JUMIA_PLAYWRIGHT_CONFIG } from "../config/jumia.playwright.config.js";
 
 /**
  * -----------------------------------------------------------------------------
@@ -33,7 +32,6 @@ export class JumiaScraper {
 
       await page.goto(url, {
         waitUntil: "domcontentloaded",
-        timeout: JUMIA_PLAYWRIGHT_CONFIG.timeout.navigation,
       });
 
       await this.waitForPage(page);
@@ -68,15 +66,6 @@ export class JumiaScraper {
    * Jumia occasionally changes its DOM.
    */
   private async waitForPage(page: Page): Promise<void> {
-    try {
-      await page.waitForLoadState("networkidle", {
-        timeout: 10_000,
-      });
-    } catch {
-      // Ignore timeout.
-      // Some pages continuously perform background requests.
-    }
-
     await page.waitForTimeout(2_000);
   }
 }

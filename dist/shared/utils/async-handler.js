@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: async-handler.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Layer: Shared
  *
  * Purpose:

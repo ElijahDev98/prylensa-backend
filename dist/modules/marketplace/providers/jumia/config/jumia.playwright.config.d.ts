@@ -9,7 +9,7 @@
  * Responsibilities:
  * - Centralize browser launch configuration.
  * - Centralize page configuration.
- * - Centralize scraping timeouts.
+ * - Disable browser deadlines for marketplace requests.
  * - Prevent browser configuration from leaking into the scraper.
  *
  * This file contains configuration only.
@@ -28,12 +28,6 @@ export declare const JUMIA_PLAYWRIGHT_CONFIG: {
         readonly extraHTTPHeaders: {
             readonly "Accept-Language": "en-US,en;q=0.9";
         };
-    };
-    readonly timeout: {
-        readonly launch: 30000;
-        readonly navigation: 30000;
-        readonly selector: 10000;
-        readonly scrape: 45000;
     };
     readonly selectors: {
         /**

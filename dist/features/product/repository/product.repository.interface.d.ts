@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: product.repository.interface.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Feature: Product
  *
  * Purpose:

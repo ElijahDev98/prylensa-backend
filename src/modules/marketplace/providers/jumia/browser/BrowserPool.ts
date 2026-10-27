@@ -26,11 +26,8 @@ export class BrowserPool {
 
     const page = await context.newPage();
 
-    page.setDefaultNavigationTimeout(
-      JUMIA_PLAYWRIGHT_CONFIG.timeout.navigation,
-    );
-
-    page.setDefaultTimeout(JUMIA_PLAYWRIGHT_CONFIG.timeout.selector);
+    page.setDefaultNavigationTimeout(0);
+    page.setDefaultTimeout(0);
 
     return page;
   }

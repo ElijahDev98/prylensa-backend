@@ -3,7 +3,7 @@
  * File: index.ts
  * Layer: Application Entry Point
  * Purpose:
- *   Entry point for the Priciq backend application.
+ *   Entry point for the Prylensa backend application.
  *   Responsible for bootstrapping the server.
  *
  * This file should NEVER:
@@ -15,4 +15,8 @@
  * Those responsibilities belong to other layers.
  * ================================================================
  */
-export {};
+/**
+ * IMPORTANT:
+ * Load environment variables BEFORE importing any application modules.
+ */
+import "dotenv/config";

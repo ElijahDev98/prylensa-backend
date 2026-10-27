@@ -1,7 +1,7 @@
 /**
  * -----------------------------------------------------------------------------
  * File: prisma-product.repository.ts
- * Project: Priciq Backend
+ * Project: Prylensa Backend
  * Feature: Product
  *
  * Purpose:

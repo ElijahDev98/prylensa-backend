@@ -42,7 +42,6 @@ export class KongaProvider implements MarketplaceProvider {
   constructor() {
     this.client = axios.create({
       baseURL: KONGA_CONFIG.BASE_URL,
-      timeout: KONGA_CONFIG.REQUEST_TIMEOUT,
       headers: {
         "Content-Type": "application/json",
         "kss-api-key": KONGA_CONFIG.API_KEY,

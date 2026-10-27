@@ -1,3 +1,8 @@
+const SLOT_STORAGE_URL = "https://api-prod.slot.ng/storage/";
+const SLOT_PUBLIC_PRODUCT_URL = "https://slot.ng/products/";
+function trimLeadingSlashes(value) {
+    return value.replace(/^\/+/, "");
+}
 /**
  * Maps Slot API products into the application's
  * shared Offer domain model.
@@ -28,16 +33,30 @@ export class SlotOfferMapper {
      * @returns Offer domain model.
      */
     static toOffer(product) {
+        const reportedDiscount = product.discount_percentage;
+        const discountPercentage = reportedDiscount !== null &&
+            Number.isFinite(reportedDiscount) &&
+            reportedDiscount > 0 &&
+            reportedDiscount < 100
+            ? reportedDiscount
+            : undefined;
+        const reportedOriginalPrice = product.original_price;
+        const originalPrice = reportedOriginalPrice !== null && reportedOriginalPrice > product.price
+            ? reportedOriginalPrice
+            : discountPercentage
+                ? product.price / (1 - discountPercentage / 100)
+                : undefined;
         return {
             id: product.id,
             productId: product.sku,
             title: product.name,
             brand: product.brand ?? undefined,
             price: product.price,
-            originalPrice: product.original_price ?? undefined,
+            originalPrice,
+            discountPercentage,
             currency: "NGN",
-            imageUrl: product.image_link,
-            productUrl: `https://slot.ng/products/${product.slug}`,
+            imageUrl: `${SLOT_STORAGE_URL}${trimLeadingSlashes(product.image_link)}`,
+            productUrl: `${SLOT_PUBLIC_PRODUCT_URL}${trimLeadingSlashes(product.slug)}`,
             marketplace: "Slot",
             inStock: product.status === "in_stock",
         };

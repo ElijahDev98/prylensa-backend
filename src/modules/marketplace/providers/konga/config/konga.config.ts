@@ -7,6 +7,8 @@
  * -----------------------------------------------------------------------------
  */
 
+import { MARKETPLACE_OFFER_TARGET } from "../../../constants/marketplace-search.constants.js";
+
 export const KONGA_CONFIG = {
   BASE_URL: "https://kss.igbimo.com",
 
@@ -16,11 +18,9 @@ export const KONGA_CONFIG = {
 
   DEFAULT_PAGE: 1,
 
-  DEFAULT_PAGE_SIZE: 5,
+  DEFAULT_PAGE_SIZE: MARKETPLACE_OFFER_TARGET,
 
   DEFAULT_FACET: "attributes.brand",
-
-  REQUEST_TIMEOUT: 10000,
 
   API_KEY: "kss_pub_BlDPgUB4XUJwJgh7oyliGBFASQLAXR1i4",
 } as const;

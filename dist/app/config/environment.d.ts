@@ -28,4 +28,11 @@ export declare const env: {
     JWT_SECRET: string;
     JWT_EXPIRES_IN: string;
     LOG_LEVEL: "error" | "warn" | "info" | "debug";
+    AI_SERVICE_URL: string;
+    INTERNAL_AI_API_KEY: string;
+    MARKETPLACE_CACHE_TTL_MS: number;
+    MONITORING_INTERVAL_MS: number;
+    CORS_ORIGINS: string;
+    RATE_LIMIT_WINDOW_MS: number;
+    RATE_LIMIT_MAX_REQUESTS: number;
 };

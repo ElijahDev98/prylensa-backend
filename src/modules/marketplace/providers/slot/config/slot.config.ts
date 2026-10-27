@@ -20,6 +20,8 @@
  * -----------------------------------------------------------------------------
  */
 
+import { MARKETPLACE_OFFER_TARGET } from "../../../constants/marketplace-search.constants.js";
+
 export const SLOT_CONFIG = {
   /**
    * Base URL of the Slot REST API.
@@ -30,11 +32,6 @@ export const SLOT_CONFIG = {
    * HTTP client configuration.
    */
   HTTP: {
-    /**
-     * Maximum request timeout.
-     */
-    TIMEOUT: 10_000,
-
     /**
      * Match the behaviour of the official Slot frontend.
      */
@@ -78,6 +75,6 @@ export const SLOT_CONFIG = {
 
     DEFAULT_PAGE: 1,
 
-    DEFAULT_PAGE_SIZE: 6,
+    DEFAULT_PAGE_SIZE: MARKETPLACE_OFFER_TARGET,
   },
 } as const;

@@ -21,9 +21,13 @@
 import { MarketplaceController } from "./controllers/MarketplaceController.js";
 import { MarketplaceService } from "./services/MarketplaceService.js";
 import { MarketplaceRepository } from "./repositories/MarketplaceRepository.js";
+import { SearchDatasetService } from "./services/SearchDatasetService.js";
 import { JumiaProvider } from "./providers/jumia/JumiaProvider.js";
 import { KongaProvider } from "./providers/konga/KongaProvider.js";
 import { SlotProvider } from "./providers/slot/SlotProvider.js";
+import { aiService } from "../ai/ai.module.js";
+import { alertService } from "../alerts/alerts.module.js";
+import { recommendationService } from "../recommendations/recommendations.module.js";
 /**
  * Registered marketplace providers.
  *
@@ -42,9 +46,10 @@ const repository = new MarketplaceRepository(providers);
 /**
  * Service.
  */
-const service = new MarketplaceService(repository);
+export const marketplaceService = new MarketplaceService(repository);
+export const searchDatasetService = new SearchDatasetService();
 /**
  * Marketplace controller.
  */
-export const marketplaceController = new MarketplaceController(service);
+export const marketplaceController = new MarketplaceController(marketplaceService, aiService, searchDatasetService, alertService, recommendationService);
 //# sourceMappingURL=marketplace.module.js.map

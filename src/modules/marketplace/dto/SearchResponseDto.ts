@@ -1,4 +1,5 @@
 import type { Offer } from "../models/Offer.js";
+import type { AiProductAnalysisItemDto } from "../../ai/dto/AiAnalysisDto.js";
 
 /**
  * -----------------------------------------------------------------------------
@@ -27,4 +28,9 @@ export interface SearchResponseDto {
    * Number of marketplace offers within the group.
    */
   offerCount: number;
+
+  /**
+   * AI analysis produced from the grouped marketplace offers.
+   */
+  aiAnalysis?: AiProductAnalysisItemDto;
 }

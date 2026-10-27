@@ -29,10 +29,6 @@ export declare const SLOT_CONFIG: {
      */
     readonly HTTP: {
         /**
-         * Maximum request timeout.
-         */
-        readonly TIMEOUT: 10000;
-        /**
          * Match the behaviour of the official Slot frontend.
          */
         readonly WITH_CREDENTIALS: true;
@@ -65,6 +61,6 @@ export declare const SLOT_CONFIG: {
     readonly SEARCH: {
         readonly ENDPOINT: "/api/v1/product-search";
         readonly DEFAULT_PAGE: 1;
-        readonly DEFAULT_PAGE_SIZE: 6;
+        readonly DEFAULT_PAGE_SIZE: 15;
     };
 };
